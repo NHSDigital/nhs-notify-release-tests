@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "tests"
+version = "0.1.0"
+description = "NHS Notify Release Tests"
+authors = ["rachel.kennedy13 <rachel.kennedy13@nhs.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.32.3"
+boto3 = "^1.37.32"
+playwright = "^1.51.0"
+install-playwright = "^0.1.1"
+notifications-python-client = "^10.0.1"
+cryptography = "^44.0.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
