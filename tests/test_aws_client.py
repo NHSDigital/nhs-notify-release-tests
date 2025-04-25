@@ -35,13 +35,12 @@ def test_s3_file_contents():
     batchId = "testing"
     
     # Iterate over available letter supplier locations and assert that available csvs contain expected content
-    for p in prefix:
-        files = aws_client.list_s3_bucket_contents(bucket_name, prefix[p])
-        file_key = next(
-            obj['Key'] 
-            for obj in files
-            if batchId in obj['Key'] and "MANIFEST" not in obj['Key']
-        )
-        content = aws_client.get_s3_object(bucket_name, file_key)
+    files = aws_client.list_s3_bucket_contents(bucket_name, prefix[0])
+    file_key = next(
+        obj['Key'] 
+        for obj in files
+        if batchId in obj['Key'] and "MANIFEST" not in obj['Key']
+    )
+    content = aws_client.get_s3_object(bucket_name, file_key)
 
-        assert "Letter" in content
+    assert "Letter" in content

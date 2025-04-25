@@ -3,7 +3,10 @@ import io
 from pprint import pprint
 from helpers.authentication import AuthenticationCache
 from helpers.apim_request import ApimRequest
+from dotenv import load_dotenv
 import os
+
+load_dotenv()  # Automatically loads from .env in project root or cwd
 
 """
 https://docs.pytest.org/en/latest/how-to/writing_plugins.html#assertion-rewriting

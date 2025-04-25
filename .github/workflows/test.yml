@@ -1,0 +1,41 @@
+name: Run Pytests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:  
+      DEBUG: true
+      API_KEY: ${{ secrets.API_KEY }}
+      API_ENVIRONMENT: ${{ secrets.API_ENVIRONMENT }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      BASE_URL: ${{ secrets.BASE_URL }}
+      GUKN_API_KEY: ${{ secrets.GUKN_API_KEY }}
+      NHS_APP_USERNAME: ${{ secrets.NHS_APP_USERNAME }}
+      NHS_APP_PASSWORD: ${{ secrets.NHS_APP_PASSWORD }}
+      NHS_APP_OTP: ${{ secrets.NHS_APP_OTP }}
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies with poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry install
+
+    - name: Run tests
+      run: |
+        poetry run pytest

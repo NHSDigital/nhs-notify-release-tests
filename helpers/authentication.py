@@ -76,8 +76,12 @@ class AuthenticationCache():
 
     def generate_new_token(self, api_key, private_key, url, kid):
         pk_pem = None
-        with open(private_key, "r") as f:
-            pk_pem = f.read()
+        # If file name provided as private key read file, else use value
+        if "private.key" in private_key:
+            with open(private_key, "r") as f:
+                pk_pem = f.read()
+        else:
+            pk_pem = private_key
 
         token_expiry = int(time()) + self.token_validity
 
