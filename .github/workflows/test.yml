@@ -32,8 +32,10 @@ jobs:
         python-version: '3.10'
 
     - name: Install dependencies with poetry
+      working-directory: ./
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
+        cd /home/runner/work/nhs-notify-release-tests
         poetry install
 
     - name: Run tests
