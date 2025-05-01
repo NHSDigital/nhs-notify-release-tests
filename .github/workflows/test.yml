@@ -26,12 +26,16 @@ jobs:
       NHS_APP_OTP: ${{ secrets.NHS_APP_OTP }}
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+  
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
     - name: Install dependencies with poetry
+      working-directory: ./
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         poetry install
