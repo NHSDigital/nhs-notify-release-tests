@@ -45,6 +45,8 @@ export PYTHON=$(which python3)
 
 Copy example.env to a .env file and populate values
 
+Create a file called `dev-private.key` and populate it with the value of the dev private key
+
 Export environment variables
 ```
 source .env
@@ -80,5 +82,5 @@ Run Tests
 
 Run all tests
 ```
-pytest
+poetry run pytest
 ````
