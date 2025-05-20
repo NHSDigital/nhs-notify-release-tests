@@ -5,17 +5,17 @@ This repository contains automated tests for the NHS Notify Release
 
 The tests cover the following scenarios:
 
-[] [NHS Notify Release Testing: Mixed Suppliers - Message Batch](https://nhsd-jira.digital.nhs.uk/browse/CCM-6701)
-[] [NHS Notify Release Testing: Mixed Suppliers - Mesh](https://nhsd-jira.digital.nhs.uk/browse/CCM-6703)
-[] [NHS Notify Release Testing: ODS Override](https://nhsd-jira.digital.nhs.uk/browse/CCM-6704)
-[] [NHS Notify Release Testing: Alternative Contact Details](https://nhsd-jira.digital.nhs.uk/browse/CCM-6705)
-[] [NHS Notify Release Testing: No Communications Scenarios](https://nhsd-jira.digital.nhs.uk/browse/CCM-6707)
-[] [NHS Notify Release Testing: NHS App Account](https://nhsd-jira.digital.nhs.uk/browse/CCM-6716)
-[] [NHS Notify Release Testing: Reporting](https://nhsd-jira.digital.nhs.uk/browse/CCM-7713)
-[] [NHS Notify Release Testing: PDF Rendering](https://nhsd-jira.digital.nhs.uk/browse/CCM-8399)
-[] [NHS Notify Release Testing: Parallel send](https://nhsd-jira.digital.nhs.uk/browse/CCM-8406)
-[] [NHS Notify Release Testing: Anonymous Patients](https://nhsd-jira.digital.nhs.uk/browse/CCM-9442)
-[] [NHS Notify Release Testing: Filter rules](https://nhsd-jira.digital.nhs.uk/browse/CCM-6022)
+* [NHS Notify Release Testing: Mixed Suppliers - Message Batch](https://nhsd-jira.digital.nhs.uk/browse/CCM-6701)
+* [NHS Notify Release Testing: Mixed Suppliers - Mesh](https://nhsd-jira.digital.nhs.uk/browse/CCM-6703)
+* [NHS Notify Release Testing: ODS Override](https://nhsd-jira.digital.nhs.uk/browse/CCM-6704)
+* [NHS Notify Release Testing: Alternative Contact Details](https://nhsd-jira.digital.nhs.uk/browse/CCM-6705)
+* [NHS Notify Release Testing: No Communications Scenarios](https://nhsd-jira.digital.nhs.uk/browse/CCM-6707)
+* [NHS Notify Release Testing: NHS App Account](https://nhsd-jira.digital.nhs.uk/browse/CCM-6716)
+* [NHS Notify Release Testing: Reporting](https://nhsd-jira.digital.nhs.uk/browse/CCM-7713)
+* [NHS Notify Release Testing: PDF Rendering](https://nhsd-jira.digital.nhs.uk/browse/CCM-8399)
+* [NHS Notify Release Testing: Parallel send](https://nhsd-jira.digital.nhs.uk/browse/CCM-8406)
+* [NHS Notify Release Testing: Anonymous Patients](https://nhsd-jira.digital.nhs.uk/browse/CCM-9442)
+* [NHS Notify Release Testing: Filter rules](https://nhsd-jira.digital.nhs.uk/browse/CCM-6022)
 
 Requirements
 ============
