@@ -43,6 +43,13 @@ setacc() {
 export PYTHON=$(which python3)
 ```
 
+Copy example.env to a .env file and populate values
+
+Export environment variables
+```
+source .env
+```
+
 Create a virtual environment
 ```
 python -m venv .venv
