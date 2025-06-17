@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.32.4"
-boto3 = "^1.38.6"
+boto3 = "^1.38.37"
 playwright = "^1.52.0"
 install-playwright = "^0.1.1"
 notifications-python-client = "^10.0.1"
