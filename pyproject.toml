@@ -13,7 +13,7 @@ playwright = "^1.52.0"
 install-playwright = "^0.1.1"
 notifications-python-client = "^10.0.1"
 cryptography = "^45.0.4"
-python-dotenv = "^1.1.0"
+python-dotenv = "^1.1.1"
 pytest = "^8.4.0"
 dotenv = "^0.9.9"
 
