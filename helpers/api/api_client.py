@@ -1,6 +1,6 @@
 import requests
 
-class ApimClient:
+class ApiClient:
     def __init__(self, url, headers):
         self.url = url
         self.headers = headers

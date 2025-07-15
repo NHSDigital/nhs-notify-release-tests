@@ -2,7 +2,7 @@ import pytest
 import io
 from pprint import pprint
 from helpers.api.authentication import AuthenticationCache
-from helpers.api.apim_client import ApimClient
+from helpers.api.api_client import ApiClient
 from dotenv import load_dotenv
 import os
 
@@ -86,4 +86,4 @@ def headers(bearer_token):
 
 @pytest.fixture
 def api_client(url, headers):
-    return ApimClient(url, headers)
+    return ApiClient(url, headers)
