@@ -4,7 +4,7 @@ import os
 import jwt
 import requests
 import json
-from .secret import Secret
+from ..secret import Secret
 
 
 class AuthenticationCache():

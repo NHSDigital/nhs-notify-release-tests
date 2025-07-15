@@ -1,9 +1,12 @@
+from helpers.api.apim_request import get_nhsapp_account
+
 def test_nhsapp_account(api_client, url):
     ods_code = "T00001"
     pages = [1,2,3,4]
     
     for page in pages:
-        response = api_client.get_nhsapp_account(
+        response = get_nhsapp_account(
+            api_client,
             {
                 "ods-organisation-code": ods_code,
                 "page": page

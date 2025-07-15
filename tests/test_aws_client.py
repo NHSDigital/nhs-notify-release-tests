@@ -1,11 +1,11 @@
-import pytest
-from helpers.aws_client import AWSClient
+from helpers.aws.aws_client import AWSClient
 from helpers.generators import Generators
+from helpers.api.apim_request import send_single_message
 
 def test_dynamodb_query(api_client):
     # Create request item
     body = Generators.generate_single_message_body("test ddb query")
-    response = api_client.post_single_message(body)
+    response = send_single_message(api_client, body)
     assert response.status_code == 201
     request_item_id = response.json().get("data").get("id")
 
