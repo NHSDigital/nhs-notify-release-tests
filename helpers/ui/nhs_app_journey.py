@@ -1,6 +1,7 @@
 from install_playwright import install
 from playwright.sync_api import expect, sync_playwright
 from helpers.logger import logger
+import re
 import os
 
 def nhs_app_login_and_view_message():
@@ -33,18 +34,15 @@ def nhs_app_login_and_view_message():
 
         expect(page.get_by_text('NHS number: 972 854 4030')).to_be_visible()
         logger.info("Login journey success!")
-        # link_text = re.compile(r"You have \d+ unread messages")
-        # page.get_by_role("link", name=link_text).click()
+        link_text = re.compile(r"You have \d+ unread messages")
+        page.get_by_role("link", name=link_text).click()
 
-        # expect(page.get_by_role("heading", name="Messages")).to_be_visible()
-        # page.get_by_role("link", name="Your NHS healthcare services").click()
-
-        # expect(page.get_by_role("heading", name="Your messages")).to_be_visible()
+        expect(page.get_by_role("heading", name="Your messages")).to_be_visible()
 
         # There might several unread messages, we need to select the right one
-        # page.locator(f'text="APIM end to end test: {personalisation} "').locator("..") \
-           # .locator("..").get_by_label("Unread message from NHS").click()
+        page.get_by_label("Unread message from NHS").click()
 
-        # page.wait_for_url("**/patient/messages/app-messaging/app-message?messageId=**")
-        # expect(page.get_by_role("heading", name="NHS ENGLAND - X26")).to_be_visible()
-        # expect(page.get_by_text(f"APIM end to end test: {personalisation}")).to_be_visible()
+        page.wait_for_url("**/patient/messages/app-messaging/app-message?messageId=**")
+        expect(page.get_by_role("heading", name="NHS ENGLAND - X26")).to_be_visible()
+        expect(page.get_by_text("NHS Notify Release: NHS")).to_be_visible()
+
