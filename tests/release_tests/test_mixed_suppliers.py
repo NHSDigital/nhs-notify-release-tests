@@ -64,7 +64,6 @@ def test_batch_message(api_client):
     # govuk_notify.get_gukn_message()
 
     # Assert SFTP csvs are in expected location
-    
 
     # Assert Dynamo records
 
