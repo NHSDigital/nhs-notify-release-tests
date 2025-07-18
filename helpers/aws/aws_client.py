@@ -59,3 +59,11 @@ class AWSClient:
     def get_s3_object(self, bucket_name, key):
         response = self.s3.get_object(bucket_name, key)
         return response
+    
+    def trigger_lambda(self, lambda_name):
+        test_event = {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        response = self.lambda_.invoke_lambda(lambda_name, test_event)
+        return response
