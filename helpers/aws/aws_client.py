@@ -45,7 +45,16 @@ class AWSClient:
         var_value = 'debug' if enabled else 'info'
         self.lambda_.update_env_var('comms-uat-api-ecl-enrichment', 'LOG_LEVEL', var_value)
 
-    def query_dynamodb(self, table_name, key_condition, expression_values):
+    def trigger_letters_polling_lambdas(self):
+        self.trigger_lambda('comms-uat-api-nsp-letters-notify-polling')
+        self.trigger_lambda('comms-uat-api-lspl-sftppoll')
+        self.trigger_lambda('comms-uat-api-lss-sftppollsynertec')
+        self.trigger_lambda('comms-uat-api-lspp-sftppollprecisionproco')
+
+    def query_dynamodb_by_request_item(self, request_item):
+        table_name = "comms-uat-api-stg-comms-mgr"
+        key_condition = "PK = :PK"
+        expression_values = {":PK": {"S": f"REQUEST_ITEM#{request_item}"}}
         response = self.dynamo.query(table_name, key_condition, expression_values)
         return response
 

@@ -16,7 +16,6 @@ def get_message(client, message_id):
     return response
 
 def poll_for_message_status(client, message_id, expected_status, timeout_seconds=300):
-    time.sleep(10)
     end_time = time.time() + timeout_seconds
     while time.time() < end_time:
         response = get_message(client, message_id)

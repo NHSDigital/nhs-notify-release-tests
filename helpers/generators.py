@@ -26,14 +26,14 @@ class Generators():
         }
 
     @staticmethod
-    def generate_message(nhs_number, message_reference, personalisation):
+    def generate_message(nhs_number, message_reference):
         return {
             "messageReference": message_reference,
             "recipient": {
                 "nhsNumber": nhs_number
             },
             "personalisation": {
-                "exampleParameter": f"NHS Notify Release Test: {personalisation}"
+                "exampleParameter": f"NHS Notify Release Test: {nhs_number}"
             }
         }
 

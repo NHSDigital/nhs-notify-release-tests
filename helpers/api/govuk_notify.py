@@ -7,10 +7,16 @@ def get_gukn_message():
 
     assert len(gov_uk_response) > 0
 
-def get_message():
+def get_message(gukn_id):
     notifications_client = NotificationsAPIClient(os.environ["GUKN_API_KEY"])
     gov_uk_response = notifications_client.get_all_notifications(
         'received',
-        reference='301nxjRzqkthxsZHMh9hnOeiHKn_301o0G6nHfUV8e6QQ6M0l3hbVl5_2025-07-18_1'
+        reference=gukn_id
     )
     return gov_uk_response
+
+def get_pdf(gukn_id):
+    notifications_client = NotificationsAPIClient(os.environ["GUKN_API_KEY"])
+    pdf = notifications_client.get_pdf_for_letter(gukn_id)
+    with open("tests/evidence/gukn_letter.pdf", "wb") as f:
+        f.write(pdf.getbuffer())
