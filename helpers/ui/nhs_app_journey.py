@@ -1,14 +1,11 @@
 from install_playwright import install
 from playwright.sync_api import expect, sync_playwright
-from helpers.logger import logger
 import re
 import os
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from helpers.logger import get_logger
 
 def nhs_app_login_and_view_message():
+    logger = get_logger(__name__)
 
     with sync_playwright() as playwright:
         install(playwright.chromium)
@@ -22,12 +19,12 @@ def nhs_app_login_and_view_message():
 
         expect(page.get_by_role("heading", name="Access your NHS services")).to_be_visible()
         page.get_by_role("button", name="Continue").click()
-        logger.info("Continuing on to user name page")
+        logger.info("Continuing on to username page")
 
         expect(page.get_by_role("heading", name="Enter your email address")).to_be_visible()
         page.get_by_label("Email address", exact=True).fill(os.environ['NHS_APP_USERNAME'])
         page.get_by_role("button", name="Continue").click()
-        logger.info("Entered user name")
+        logger.info("Entered username")
 
         expect(page.get_by_role("heading", name="Enter your password")).to_be_visible()
         page.get_by_label("Password", exact=True).fill(os.environ['NHS_APP_PASSWORD'])
