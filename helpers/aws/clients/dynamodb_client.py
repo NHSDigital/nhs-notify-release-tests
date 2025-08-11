@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 from helpers.logger import get_logger
 
-logger = get_logger("dynamodb_client")
+logger = get_logger(__name__)
 
 class DynamoDBClient:
     def __init__(self, region_name='eu-west-2'):
@@ -16,7 +16,6 @@ class DynamoDBClient:
                 KeyConditionExpression=key_condition_expression,
                 ExpressionAttributeValues=expression_attribute_values
             )
-            logger.info(f"Query result: {response['Items']}")
             return response['Items']
         except ClientError as e:
             logger.error(f"Query failed for table {table_name}: {e}")

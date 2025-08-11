@@ -3,10 +3,12 @@ import io
 from pprint import pprint
 from helpers.api.authentication import AuthenticationCache
 from helpers.api.api_client import ApiClient
+from helpers.logger import configure_logging
 from dotenv import load_dotenv
 import os
 
 load_dotenv()  # Automatically loads from .env in project root or cwd
+configure_logging() # Set up logging configuration
 
 """
 https://docs.pytest.org/en/latest/how-to/writing_plugins.html#assertion-rewriting

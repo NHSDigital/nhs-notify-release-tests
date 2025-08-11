@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 from helpers.logger import get_logger
 
-logger = get_logger("s3_client")
+logger = get_logger(__name__)
 
 class S3Client:
     def __init__(self, region_name='eu-west-2'):

@@ -1,10 +1,11 @@
-from helpers.api.apim_request import send_single_message, get_message, poll_for_message_status
+from helpers.api.apim_request import APIHelper
 from helpers.aws.aws_client import AWSClient
 from helpers.generators import Generators
 from helpers.constants import NHS_NUMBER_GUKN_LETTER
 
 def test_filter_rules(api_client):
     # Enable filter rule for letters to prevent letter requests from being processed
+    api_helper = APIHelper(api_client)
     aws_client = AWSClient()
     aws_client.filter_rules(enabled=True)
     
@@ -13,12 +14,12 @@ def test_filter_rules(api_client):
     body["data"]["attributes"]["recipient"]["nhsNumber"] = NHS_NUMBER_GUKN_LETTER
 
     # Send request and verify it ends in a failed state
-    response = send_single_message(api_client, body)
+    response = api_helper.send_single_message(body)
     message_id = response.json().get('data').get('id')
-    poll_for_message_status(api_client, message_id, 'failed')
+    api_helper.poll_for_message_status(message_id, 'failed')
 
     # Verify request has expected channel status and description
-    get_response = get_message(api_client, message_id)
+    get_response = api_helper.get_message(message_id)
     channels = get_response.json().get('data').get('attributes').get('channels')
     for channel in channels:
         if channel.get('type') == 'letter':
