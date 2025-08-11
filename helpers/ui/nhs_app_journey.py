@@ -45,8 +45,7 @@ def nhs_app_login_and_view_message():
         logger.info("Navigated to messages")
 
         expect(page.get_by_role("heading", name="Your messages")).to_be_visible()
-        # There might several unread messages, we need to select the right one
-        page.get_by_label("Unread message from NHS").click()
+        page.get_by_role("link", name="Unread message from NHS").click()
         logger.info("Selected unread messages")
 
         page.wait_for_url("**/patient/messages/app-messaging/app-message?messageId=**")

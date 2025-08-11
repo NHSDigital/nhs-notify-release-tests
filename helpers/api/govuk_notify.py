@@ -30,18 +30,18 @@ def verify_sms_content(user):
     gukn_record = gukn_response['notifications'][0]
     assert gukn_record['body'] == f'NHS Notify Release Test: {user.nhs_number}'
     assert gukn_record['phone_number'] == user.contact_detail
-    logger.info("SMS Appears as expected")
+    logger.info(f"SMS Appears as expected for user {user.nhs_number}")
 
 def verify_email_content(user):
     gukn_response = get_message(user.gukn_id)
     gukn_record = gukn_response['notifications'][0]
     assert gukn_record['body'] == f'NHS Notify Release Test: {user.nhs_number}'
     assert gukn_record['email_address'] == user.contact_detail
-    logger.info("Email Appears as expected")
+    logger.info(f"Email Appears as expected for user {user.nhs_number}")
     
 def verify_gukn_letter(user):
     gukn_response = get_message(user.gukn_id)
     id = gukn_response['notifications'][0]['id']
     get_pdf(id)
     assert os.path.exists('tests/evidence/gukn_letter.pdf')
-    logger.info("Letter pdf exists")
+    logger.info(f"Letter PDF exists for user {user.nhs_number}")

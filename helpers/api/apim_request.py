@@ -70,7 +70,7 @@ class APIHelper:
                 self.poll_for_message_status(
                     user.request_item,
                     'delivered',
-                    30
+                    60
                 )
                 self.logger.info(f"REQUEST_ITEM#{user.request_item} is in a delivered state")
             except:
