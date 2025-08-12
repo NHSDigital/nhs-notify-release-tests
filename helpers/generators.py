@@ -29,19 +29,24 @@ class Generators():
         }
 
     @staticmethod
-    def generate_message(nhs_number, message_reference, personalisation):
+    def generate_message(user):
         return {
-            "messageReference": message_reference,
+            "messageReference": user.message_reference,
             "recipient": {
-                "nhsNumber": nhs_number
+                "nhsNumber": user.nhs_number,
+                "contactDetails": {}
             },
             "personalisation": {
-                "exampleParameter": personalisation
+                "exampleParameter": user.personalisation
             },
             "originator": {
-                "odsCode": ""   
+                "odsCode": ""
             }
         }
+
+    @staticmethod
+    def generate_alternative_contact_detail(user):
+        return user.contact_detail
 
     @staticmethod
     def generate_single_message_body(scenario=None):

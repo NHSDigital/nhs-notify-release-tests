@@ -36,7 +36,7 @@ def test_batch_message(api_client):
     # Logging handled by APIHelper and AWSClient
 
     nhs_app_journey.nhs_app_login_and_view_message(
-        personalisation=UserData.get_by_nhs_number(NHS_NUMBER_EMAIL, test_users).personalisation)
+        personalisation=UserData.get_by_nhs_number(NHS_NUMBER_NHSAPP, test_users).personalisation)
 
     UserData.enrich_test_data(aws_client, test_users)
 
