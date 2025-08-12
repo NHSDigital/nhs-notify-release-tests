@@ -18,6 +18,9 @@ class Generators():
                             },
                             "personalisation": {
                                 "exampleParameter": f"NHS Notify Release Test: {scenario}"
+                            },
+                            "originator": {
+                                "odsCode": ""   
                             }
                         }
                     ]
@@ -26,19 +29,22 @@ class Generators():
         }
 
     @staticmethod
-    def generate_message(nhs_number, message_reference):
+    def generate_message(nhs_number, message_reference, personalisation):
         return {
             "messageReference": message_reference,
             "recipient": {
                 "nhsNumber": nhs_number
             },
             "personalisation": {
-                "exampleParameter": f"NHS Notify Release Test: {nhs_number}"
+                "exampleParameter": personalisation
+            },
+            "originator": {
+                "odsCode": ""   
             }
         }
 
     @staticmethod
-    def generate_single_message_body(scenario):
+    def generate_single_message_body(scenario=None):
         return {
             "data": {
                 "type": "Message",
@@ -50,7 +56,10 @@ class Generators():
                     },
                     "personalisation": {
                         "exampleParameter": f"NHS Notify Release Test: {scenario}"
-                    }
+                    },
+                    "originator": {
+                        "odsCode": ""   
+                    }   
                 }
             }
         }
