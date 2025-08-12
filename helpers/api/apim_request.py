@@ -31,6 +31,7 @@ class APIHelper:
             response = self.get_message(message_id)
             status = response.json()["data"]["attributes"]["messageStatus"]
             if status == expected_status:
+                logger.info(f"REQUEST_ITEM#{message_id} is in a delivered state")
                 return status
             time.sleep(10)
         raise TimeoutError(f"Polling timeout. Final status: {status}")
