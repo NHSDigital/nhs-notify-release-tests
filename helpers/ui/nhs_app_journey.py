@@ -4,7 +4,7 @@ import re
 import os
 from helpers.logger import get_logger
 
-def nhs_app_login_and_view_message():
+def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation=None):
     logger = get_logger(__name__)
 
     with sync_playwright() as playwright:
@@ -45,10 +45,10 @@ def nhs_app_login_and_view_message():
         logger.info("Navigated to messages")
 
         expect(page.get_by_role("heading", name="Your messages")).to_be_visible()
-        page.get_by_role("link", name="Unread message from NHS").click()
+        page.get_by_role("link", name="Unread message from", exact=False).click()
         logger.info("Selected unread messages")
 
         page.wait_for_url("**/patient/messages/app-messaging/app-message?messageId=**")
-        expect(page.get_by_role("heading", name="NHS ENGLAND - X26")).to_be_visible()
-        expect(page.get_by_text("NHS Notify Release: NHS")).to_be_visible()
+        expect(page.get_by_role("heading", name=ods_name)).to_be_visible()
+        expect(page.get_by_text(f"NHS Notify Release: {personalisation}")).to_be_visible()
         logger.info("NHS App message appears as expected")

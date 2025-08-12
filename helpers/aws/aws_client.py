@@ -85,19 +85,19 @@ class AWSClient:
         bucket_name = "comms-736102632839-eu-west-2-uat-api-lspl-letter-csv"
         file = f"PRECISIONPROCO/uploaded/pp-release-testing/{user.batch_id}.csv" 
         content = self.get_s3_object(bucket_name, file)
-        assert user.nhs_number in content
+        assert user.personalisation in content
         logger.info(f"Verified Precision Proco letter for user {user.nhs_number}")
         
     def verify_mba_letter(self, user):
         bucket_name = "comms-736102632839-eu-west-2-uat-api-lspl-letter-csv"       
         file = f"MBA/uploaded/hh-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file)
-        assert user.nhs_number in content
+        assert user.personalisation in content
         logger.info(f"Verified MBA letter for user {user.nhs_number}")
 
     def verify_synertec_letter(self, user):
         bucket_name = "comms-736102632839-eu-west-2-uat-api-lspl-letter-csv"
         file = f"SYNERTEC/uploaded/synertec-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file)
-        assert user.nhs_number in content
+        assert user.personalisation in content
         logger.info(f"Verified Synertec letter for user {user.nhs_number}")

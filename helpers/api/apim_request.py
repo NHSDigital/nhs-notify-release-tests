@@ -1,6 +1,6 @@
 import time
 from helpers.generators import Generators
-from helpers.test_data.batch_data import BatchData
+from helpers.test_data.user_data import UserData
 from helpers.logger import get_logger
 
 logger = get_logger(__name__)
@@ -43,9 +43,17 @@ class APIHelper:
     def construct_batch_message_body(self, users):
         body = Generators.generate_message_batch_body("Message Batch")
         body['data']['attributes']['messages'] = [
-            Generators.generate_message(user.nhs_number, user.message_reference)
+            Generators.generate_message(user.nhs_number, user.message_reference, user.personalisation)
             for user in users
         ]
+        return body
+    
+    def construct_single_message_body(self, user):
+        body = Generators.generate_single_message_body()
+        body['data']['attributes']['recipient']['nhsNumber'] = user.nhs_number
+        body['data']['attributes']['messageReference'] = user.message_reference
+        body['data']['attributes']['personalisation']['exampleParameter'] = user.personalisation
+        body['data']['attributes']['originator']['odsCode'] = user.ods_code
         return body
 
     def send_and_verify_message_batch_request(self, body, test_users, poll_user):
@@ -54,9 +62,19 @@ class APIHelper:
         message_items = response.json()['data']['attributes']['messages']
         logger.info("Batch message sent successfully")
 
-        BatchData.update_request_items(test_users, message_items)
-        self.poll_for_sending(BatchData.get_by_nhs_number(poll_user, test_users))
+        UserData.update_request_items(test_users, message_items)
+        self.poll_for_sending(UserData.get_by_nhs_number(poll_user, test_users))
         logger.info("Messages are in a 'sending' state")
+    
+    def send_and_verify_single_message_request(self, body, user):
+        response = self.send_single_message(body)
+        assert response.status_code == 201
+        request_id = response.json()['data']['id']
+        logger.info("Single message sent successfully")
+
+        UserData.update_request_item(user, request_id)
+        self.poll_for_sending(user)
+        logger.info("Message is in a 'sending' state")
 
     def poll_for_sending(self, user):
         self.poll_for_message_status(
