@@ -43,12 +43,15 @@ class APIHelper:
 
     def construct_batch_message_body(self, users):
         body = Generators.generate_message_batch_body("Message Batch")
-        body['data']['attributes']['messages'] = [
-            Generators.generate_message(user.nhs_number, user.message_reference, user.personalisation)
-            for user in users
-        ]
+        messages = []
+        for user in users:
+            message = Generators.generate_message(user)
+            if user.contact_detail:
+                message['recipient']['contactDetails'] = user.contact_detail
+            messages.append(message)
+        body['data']['attributes']['messages'] = messages
         return body
-    
+
     def construct_single_message_body(self, user):
         body = Generators.generate_single_message_body()
         body['data']['attributes']['recipient']['nhsNumber'] = user.nhs_number
