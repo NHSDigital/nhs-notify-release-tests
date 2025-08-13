@@ -24,18 +24,6 @@ class APIHelper:
         assert response.status_code == 200
         return response
 
-    def poll_for_message_status(self, message_id, expected_status, timeout_seconds=300):
-        time.sleep(5)
-        end_time = time.time() + timeout_seconds
-        while time.time() < end_time:
-            response = self.get_message(message_id)
-            status = response.json()["data"]["attributes"]["messageStatus"]
-            if status == expected_status:
-                logger.info(f"REQUEST_ITEM#{message_id} is in a delivered state")
-                return status
-            time.sleep(10)
-        raise TimeoutError(f"Polling timeout. Final status: {status}")
-
     def get_nhsapp_account(self, params):
         response = self.client.get_nhsapp_account(params)
         assert response.status_code == 200
@@ -60,31 +48,25 @@ class APIHelper:
         body['data']['attributes']['originator']['odsCode'] = user.ods_code
         return body
 
-    def send_and_verify_message_batch_request(self, body, test_users, poll_user):
+    def send_and_verify_message_batch_request(self, body, test_users, poll_user, status='sending'):
         response = self.send_batch_message(body)
         assert response.status_code == 201
         message_items = response.json()['data']['attributes']['messages']
         logger.info("Batch message sent successfully")
 
         UserData.update_request_items(test_users, message_items)
-        self.poll_for_sending(UserData.get_by_nhs_number(poll_user, test_users))
-        logger.info("Messages are in a 'sending' state")
+        self.poll_for_message_status(UserData.get_by_nhs_number(poll_user, test_users).request_item, status)
+        logger.info(f"Messages are in a '{status}' state")
     
-    def send_and_verify_single_message_request(self, body, user):
+    def send_and_verify_single_message_request(self, body, user, status='sending'):
         response = self.send_single_message(body)
         assert response.status_code == 201
         request_id = response.json()['data']['id']
         logger.info("Single message sent successfully")
 
         UserData.update_request_item(user, request_id)
-        self.poll_for_sending(user)
-        logger.info("Message is in a 'sending' state")
-
-    def poll_for_sending(self, user):
-        self.poll_for_message_status(
-            user.request_item,
-            'sending'
-        )
+        self.poll_for_message_status(request_id, status)
+        logger.info(f"Message is in a '{status}' state")
 
     def poll_all_users_for_delivered(self, test_users):
         for user in test_users:
@@ -97,4 +79,15 @@ class APIHelper:
                 self.logger.info(f"REQUEST_ITEM#{user.request_item} is in a delivered state")
             except:
                 raise AssertionError(f"REQUEST_ITEM#{user.request_item} is not in a delivered state")
-    
+
+    def poll_for_message_status(self, message_id, expected_status, timeout_seconds=300):
+        time.sleep(5)
+        end_time = time.time() + timeout_seconds
+        while time.time() < end_time:
+            response = self.get_message(message_id)
+            status = response.json()["data"]["attributes"]["messageStatus"]
+            if status == expected_status:
+                logger.info(f"REQUEST_ITEM#{message_id} is in a {expected_status} state")
+                return status
+            time.sleep(10)
+        raise TimeoutError(f"Polling timeout. Final status: {status}")
