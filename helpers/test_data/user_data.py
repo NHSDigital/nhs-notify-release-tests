@@ -17,7 +17,8 @@ class UserData:
         batch_id=None,
         gukn_id=None,
         contact_detail=None,
-        ods_code=None
+        ods_code=None,
+        failed_reason=None
     ):
         self.nhs_number = nhs_number
         self.message_reference = message_reference
@@ -30,6 +31,7 @@ class UserData:
         self.gukn_id = gukn_id
         self.contact_detail = contact_detail
         self.ods_code = ods_code
+        self.failed_reason = failed_reason
 
     @staticmethod
     def get_by_nhs_number(nhs_number: str, test_users: List["UserData"]) -> Optional["UserData"]:
@@ -102,6 +104,7 @@ class UserData:
             f"contact_detail='{self.contact_detail}', "
             f"request_item='{self.request_item}', "
             f"request_item_plan_id='{self.request_item_plan_id}', "
-            f"ods_code='{self.ods_code}')"
+            f"ods_code='{self.ods_code}', "
+            f"failed_reason='{self.failed_reason}')"
         )
     
