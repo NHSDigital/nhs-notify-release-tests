@@ -7,7 +7,7 @@ logger = get_logger(__name__)
 class UserData:
     def __init__(
         self,
-        nhs_number,
+        nhs_number=None,
         message_reference=None,
         communication_type=None,
         supplier=None,

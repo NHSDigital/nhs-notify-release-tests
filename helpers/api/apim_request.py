@@ -34,6 +34,14 @@ class APIHelper:
         messages = []
         for user in users:
             message = Generators.generate_message(user)
+            if user.nhs_number is not None:
+                message['recipient']['nhsNumber'] = user.nhs_number
+            else:
+                message['recipient'].pop('nhsNumber')
+            if user.ods_code is not None:
+                message['originator']['odsCode'] = user.ods_code
+            else:
+                message['originator'].pop('odsCode')
             if user.contact_detail:
                 message['recipient']['contactDetails'] = user.contact_detail
             messages.append(message)
@@ -42,10 +50,18 @@ class APIHelper:
 
     def construct_single_message_body(self, user):
         body = Generators.generate_single_message_body()
-        body['data']['attributes']['recipient']['nhsNumber'] = user.nhs_number
         body['data']['attributes']['messageReference'] = user.message_reference
         body['data']['attributes']['personalisation']['exampleParameter'] = user.personalisation
-        body['data']['attributes']['originator']['odsCode'] = user.ods_code
+        if user.nhs_number is not None:
+            body['data']['attributes']['recipient']['nhsNumber'] = user.nhs_number
+        else:
+            body['data']['attributes']['recipient'].pop('nhsNumber')
+        if user.ods_code is not None:
+            body['data']['attributes']['originator']['odsCode'] = user.ods_code
+        else:
+            body['data']['attributes']['originator'].pop('odsCode')
+        if user.contact_detail:
+            body['data']['attributes']['recipient']['contactDetails'] = user.contact_detail
         return body
 
     def send_and_verify_message_batch_request(self, body, test_users, poll_user, status='sending'):
@@ -87,7 +103,6 @@ class APIHelper:
             response = self.get_message(message_id)
             status = response.json()["data"]["attributes"]["messageStatus"]
             if status == expected_status:
-                logger.info(f"REQUEST_ITEM#{message_id} is in a {expected_status} state")
                 return status
             time.sleep(10)
         raise TimeoutError(f"Polling timeout. Final status: {status}")
