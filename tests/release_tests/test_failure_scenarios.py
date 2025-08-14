@@ -35,11 +35,14 @@ def test_failure_scenarios(api_client):
     api_helper.send_and_verify_message_batch_request(body, test_users, NHS_NUMBER_NO_VALID_PLANS, status='failed')
 
     for user in test_users:
+        failure_reason_found = False
         ddb_records = aws_client.query_dynamodb_by_request_item(user.request_item)
         for record in ddb_records:
             if user.failed_reason != record.get('failedReason', {}).get('S'):
                 continue
             else:
                 assert user.failed_reason == record.get('failedReason', {}).get('S')
+                failure_reason_found = True
                 logger.info(f"Verified failure reason for {user.nhs_number}: {user.failed_reason}")
                 break
+        assert failure_reason_found, f"Failure reason not found for {user.nhs_number}: {user.failed_reason}"
