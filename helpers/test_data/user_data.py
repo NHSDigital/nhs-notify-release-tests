@@ -1,6 +1,7 @@
 from typing import List, Optional
 from datetime import datetime
 from helpers.logger import get_logger
+from helpers.constants import API_ROUTING_CONFIGURATION_ALL_CHANNELS_CASCADE
 
 logger = get_logger(__name__)
 
@@ -12,6 +13,7 @@ class UserData:
         communication_type=None,
         supplier=None,
         personalisation=None,
+        routing_plan_id=API_ROUTING_CONFIGURATION_ALL_CHANNELS_CASCADE,
         request_item=None,
         request_item_plan_id=None,
         batch_id=None,
@@ -25,6 +27,7 @@ class UserData:
         self.communication_type = communication_type
         self.supplier = supplier
         self.personalisation = personalisation
+        self.routing_plan_id = routing_plan_id
         self.request_item = request_item
         self.request_item_plan_id = request_item_plan_id
         self.batch_id = batch_id
@@ -99,6 +102,7 @@ class UserData:
             f"communication_type='{self.communication_type}', "
             f"supplier='{self.supplier}', "
             f"personalisation='{self.personalisation}', "
+            f"routing_plan_id='{self.routing_plan_id}', "
             f"batch_id='{self.batch_id}', "
             f"gukn_id='{self.gukn_id}', "
             f"contact_detail='{self.contact_detail}', "

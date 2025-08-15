@@ -34,6 +34,7 @@ class APIHelper:
         messages = []
         for user in users:
             message = Generators.generate_message(user)
+            message['messageReference'] = user.message_reference
             if user.nhs_number is not None:
                 message['recipient']['nhsNumber'] = user.nhs_number
             else:
@@ -50,6 +51,7 @@ class APIHelper:
 
     def construct_single_message_body(self, user):
         body = Generators.generate_single_message_body()
+        body['data']['attributes']['routingPlanId'] = user.routing_plan_id
         body['data']['attributes']['messageReference'] = user.message_reference
         body['data']['attributes']['personalisation']['exampleParameter'] = user.personalisation
         if user.nhs_number is not None:
