@@ -2,7 +2,7 @@ from helpers.aws.clients.dynamodb_client import DynamoDBClient
 from helpers.aws.clients.s3_client import S3Client
 from helpers.aws.clients.lambda_client import LambdaClient
 from helpers.logger import get_logger
-from helpers.evidence import save_response_to_file
+from helpers.evidence import save_evidence
 
 logger = get_logger(__name__)
 
@@ -87,7 +87,7 @@ class AWSClient:
         file = f"PRECISIONPROCO/uploaded/pp-release-testing/{user.batch_id}.csv" 
         content = self.get_s3_object(bucket_name, file)
         assert user.personalisation in content
-        save_response_to_file(content, f"{user.personalisation}/precision_proco_letter.csv")
+        save_evidence(content, f"{user.personalisation}/precision_proco_letter.csv")
         logger.info(f"Verified Precision Proco letter for user {user.nhs_number}")
         
     def verify_mba_letter(self, user):
@@ -95,7 +95,7 @@ class AWSClient:
         file = f"MBA/uploaded/hh-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file)
         assert user.personalisation in content
-        save_response_to_file(content, f"{user.personalisation}/mba.csv")
+        save_evidence(content, f"{user.personalisation}/mba.csv")
         logger.info(f"Verified MBA letter for user {user.nhs_number}")
 
     def verify_synertec_letter(self, user):
@@ -103,5 +103,5 @@ class AWSClient:
         file = f"SYNERTEC/uploaded/synertec-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file)
         assert user.personalisation in content
-        save_response_to_file(content, f"{user.personalisation}/synertec.csv")
+        save_evidence(content, f"{user.personalisation}/synertec.csv")
         logger.info(f"Verified Synertec letter for user {user.nhs_number}")

@@ -13,7 +13,7 @@ def test_anonymous_patient(api_client):
             message_reference=str(uuid.uuid1()),
             communication_type="EMAIL",
             supplier="GOVUK_NOTIFY",
-            personalisation="Anonymous Patient",
+            personalisation="Anonymous Patients",
             contact_detail={
                 "name": {
                     "prefix": "Ms",

@@ -2,7 +2,7 @@ from notifications_python_client.notifications import NotificationsAPIClient
 import os
 import time
 from helpers.logger import get_logger
-from helpers.evidence import save_response_to_json_file, save_response_to_pdf_file
+from helpers.evidence import save_evidence
 logger = get_logger(__name__)
 
 def get_gukn_message():
@@ -23,7 +23,7 @@ def get_pdf(gukn_id, user):
     notifications_client = NotificationsAPIClient(os.environ["GUKN_API_KEY"])
     pdf = notifications_client.get_pdf_for_letter(gukn_id)
     evidence_path = f"{user.personalisation}/gukn_letter.pdf"
-    save_response_to_pdf_file(pdf, evidence_location=evidence_path)
+    save_evidence(pdf, evidence_location=evidence_path)
 
 def verify_sms_content(user):
     # Query GUKN for record
@@ -32,7 +32,7 @@ def verify_sms_content(user):
     assert user.personalisation in gukn_record['body']
     assert gukn_record['phone_number'] == user.contact_detail
     evidence_path=f"{user.personalisation}/gukn_sms.json"
-    save_response_to_json_file(gukn_response, evidence_location=evidence_path)
+    save_evidence(gukn_response, evidence_location=evidence_path)
     logger.info(f"SMS Appears as expected for user {user.nhs_number}")
 
 def verify_email_content(user):
@@ -41,7 +41,7 @@ def verify_email_content(user):
     assert user.personalisation in gukn_record['body']
     assert gukn_record['email_address'] == user.contact_detail
     evidence_path=f"{user.personalisation}/gukn_email.json"
-    save_response_to_json_file(gukn_response, evidence_location=evidence_path)
+    save_evidence(gukn_response, evidence_location=evidence_path)
     logger.info(f"Email Appears as expected for user {user.nhs_number}")
     
 def verify_gukn_letter(user):
