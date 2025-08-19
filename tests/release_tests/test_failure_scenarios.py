@@ -3,7 +3,7 @@ import uuid
 from helpers.test_data.user_data import UserData
 from helpers.aws.aws_client import AWSClient
 from helpers.api.apim_request import APIHelper
-from helpers.evidence import store_evidence_to_json_file
+from helpers.evidence import save_response_to_json_file
 from helpers.constants import (
     NHS_NUMBER_INFORMALLY_DEAD,
     NHS_NUMBER_FORMALLY_DEAD,
@@ -45,6 +45,6 @@ def test_failure_scenarios(api_client):
                 assert user.failed_reason == record.get('failedReason', {}).get('S')
                 failure_reason_found = True
                 logger.info(f"Verified failure reason for {user.nhs_number}: {user.failed_reason}")
-                store_evidence_to_json_file(record, f"{user.personalisation}/{user.failed_reason}.json")
+                save_response_to_json_file(record, f"{user.personalisation}/{user.failed_reason}.json")
                 break
         assert failure_reason_found, f"Failure reason not found for {user.nhs_number}: {user.failed_reason}"

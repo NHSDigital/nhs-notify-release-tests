@@ -3,7 +3,7 @@ from helpers.api.apim_request import APIHelper
 from helpers.aws.aws_client import AWSClient
 from helpers.test_data.user_data import UserData
 from helpers.constants import NHS_NUMBER_GUKN_LETTER
-from helpers.evidence import store_evidence_to_json_file
+from helpers.evidence import save_response_to_json_file
 
 def test_filter_rules(api_client):
     api_helper = APIHelper(api_client)
@@ -28,6 +28,6 @@ def test_filter_rules(api_client):
         if channel.get('type') == 'letter':
             assert channel.get('channelStatus') == 'failed'
             assert channel.get('channelStatusDescription') == 'Failed reason: Matched exclusion rule with ID NHS Notify Automated Release Regression'
-    store_evidence_to_json_file(get_response.json(), f"{user[0].personalisation}/filter_rule_response.json")
+    save_response_to_json_file(get_response.json(), f"{user[0].personalisation}/filter_rule_response.json")
 
     aws_client.filter_rules(enabled=False)
