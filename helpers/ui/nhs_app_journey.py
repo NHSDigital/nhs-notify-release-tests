@@ -45,7 +45,7 @@ def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation
         logger.info("Navigated to messages")
 
         expect(page.get_by_role("heading", name="Your messages")).to_be_visible()
-        page.get_by_role("link", name="Unread message from", exact=False).click()
+        page.get_by_role("link", name="Unread message from", exact=False).first.click()
         logger.info("Selected unread messages")
 
         page.wait_for_url("**/patient/messages/app-messaging/app-message?messageId=**")

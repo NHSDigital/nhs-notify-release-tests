@@ -46,7 +46,7 @@ class AWSClient:
                 assert i['active']['BOOL'] is enabled
 
         var_value = 'debug' if enabled else 'info'
-        self.lambda_.update_env_var('comms-uat-api-ecl-enrichment', 'LOG_LEVEL', var_value)
+        self.lambda_.update_env_var('comms-uat-api-ecl-enrich', 'LOG_LEVEL', var_value)
 
     def trigger_letters_polling_lambdas(self):
         self.trigger_lambda('comms-uat-api-nsp-letters-notify-polling')
