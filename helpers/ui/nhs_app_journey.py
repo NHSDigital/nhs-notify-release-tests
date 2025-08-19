@@ -55,3 +55,6 @@ def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation
         evidence_path = f"{PATH_TO_EVIDENCE}/{personalisation.replace(' ', '_')}/nhsapp.png"
         page.screenshot(path=evidence_path)
         logger.info("NHS App message appears as expected")
+
+        page.get_by_role("link", name="Home", exact=True).click()
+        page.get_by_role("link", name="Log out").click()
