@@ -3,6 +3,7 @@ from playwright.sync_api import expect, sync_playwright
 import re
 import os
 from helpers.logger import get_logger
+from helpers.constants import PATH_TO_EVIDENCE
 
 def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation=None):
     logger = get_logger(__name__)
@@ -51,4 +52,6 @@ def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation
         page.wait_for_url("**/patient/messages/app-messaging/app-message?messageId=**")
         expect(page.get_by_role("heading", name=ods_name)).to_be_visible()
         expect(page.get_by_text(f"NHS Notify Release: {personalisation}")).to_be_visible()
+        evidence_path = f"{PATH_TO_EVIDENCE}/{personalisation.replace(' ', '_')}/nhsapp.png"
+        page.screenshot(path=evidence_path)
         logger.info("NHS App message appears as expected")
