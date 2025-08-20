@@ -11,7 +11,7 @@ def test_ods_override(api_client):
         nhs_number = NHS_NUMBER_NHSAPP,
         message_reference= str(uuid.uuid1()),
         ods_code = "Y51",
-        personalisation = "Y51 ODS Override"
+        personalisation = "ODS Override"
     )
 
     body = api_helper.construct_single_message_body(user)

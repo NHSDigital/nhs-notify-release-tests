@@ -22,7 +22,7 @@ def test_alternative_contact_details(api_client):
             message_reference=str(uuid.uuid1()),
             communication_type="EMAIL",
             supplier="GOVUK_NOTIFY",
-            personalisation="Alternative contact details",
+            personalisation="Alternative Contact Details",
             contact_detail={
                 "email": "nhsnotify@acd.com"
             }
@@ -32,7 +32,7 @@ def test_alternative_contact_details(api_client):
             message_reference=str(uuid.uuid1()),
             communication_type="SMS",
             supplier="GOVUK_NOTIFY",
-            personalisation="Alternative contact details",
+            personalisation="Alternative Contact Details",
             contact_detail={
                 "sms": "07777777777"
             }
@@ -42,7 +42,7 @@ def test_alternative_contact_details(api_client):
             message_reference=str(uuid.uuid1()),
             communication_type="LETTER",
             supplier="GOVUK_NOTIFY",
-            personalisation="Alternative contact details",
+            personalisation="Alternative Contact Details",
             contact_detail= {
                 "address": {
                     "lines": [

@@ -20,13 +20,13 @@ def test_batch_message(api_client):
 
     # Set up test data
     test_users = [
-        UserData(NHS_NUMBER_NHSAPP, str(uuid.uuid1()), "NHSAPP", "NHSAPP", personalisation="Message batch"),
-        UserData(NHS_NUMBER_EMAIL, str(uuid.uuid1()), "EMAIL", "GOVUK_NOTIFY", personalisation="Message batch"),
-        UserData(NHS_NUMBER_SMS, str(uuid.uuid1()), "SMS", "GOVUK_NOTIFY", personalisation="Message batch"),
-        UserData(NHS_NUMBER_GUKN_LETTER, str(uuid.uuid1()), "LETTER", "GOVUK_NOTIFY", personalisation="Message batch"),
-        UserData(NHS_NUMBER_MBA_LETTER, str(uuid.uuid1()), "LETTER", "MBA", personalisation="Message batch"),
-        UserData(NHS_NUMBER_SYNERTEC_LETTER, str(uuid.uuid1()), "LETTER", "SYNERTEC", personalisation="Message batch"),
-        UserData(NHS_NUMBER_PP_LETTER, str(uuid.uuid1()), "LETTER", "PRECISIONPROCO", personalisation="Message batch"),
+        UserData(NHS_NUMBER_NHSAPP, str(uuid.uuid1()), "NHSAPP", "NHSAPP", personalisation="Mixed Suppliers Message Batch"),
+        UserData(NHS_NUMBER_EMAIL, str(uuid.uuid1()), "EMAIL", "GOVUK_NOTIFY", personalisation="Mixed Suppliers Message Batch"),
+        UserData(NHS_NUMBER_SMS, str(uuid.uuid1()), "SMS", "GOVUK_NOTIFY", personalisation="Mixed Suppliers Message Batch"),
+        UserData(NHS_NUMBER_GUKN_LETTER, str(uuid.uuid1()), "LETTER", "GOVUK_NOTIFY", personalisation="Mixed Suppliers Message Batch"),
+        UserData(NHS_NUMBER_MBA_LETTER, str(uuid.uuid1()), "LETTER", "MBA", personalisation="Mixed Suppliers Message Batch"),
+        UserData(NHS_NUMBER_SYNERTEC_LETTER, str(uuid.uuid1()), "LETTER", "SYNERTEC", personalisation="Mixed Suppliers Message Batch"),
+        UserData(NHS_NUMBER_PP_LETTER, str(uuid.uuid1()), "LETTER", "PRECISIONPROCO", personalisation="Mixed Suppliers Message Batch"),
     ]
 
     body = api_helper.construct_batch_message_body(test_users)

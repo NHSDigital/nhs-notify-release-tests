@@ -1,4 +1,5 @@
 from helpers.api.apim_request import APIHelper
+from helpers.evidence import save_evidence
 
 def test_nhsapp_account(api_client, url):
     api_helper = APIHelper(api_client)
@@ -30,3 +31,4 @@ def test_nhsapp_account(api_client, url):
         assert resp.get("links").get("self").startswith(url)
         assert resp.get("links").get("self") \
             .endswith(f"/channels/nhsapp/accounts?ods-organisation-code={ods_code}&page={page}")
+        save_evidence(resp, f"NHSApp_Account/{ods_code}_page_{page}.json")
