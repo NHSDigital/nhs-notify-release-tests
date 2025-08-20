@@ -24,3 +24,5 @@ def save_evidence(response, evidence_location):
         else:
             with open(evidence, "w") as f:
                 f.write(response)
+    else:
+        raise ValueError(f"Unsupported file extension: {ext}")
