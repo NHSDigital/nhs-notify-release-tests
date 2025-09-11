@@ -2,12 +2,16 @@
 
 set -uo pipefail
 
-if [ -z "$API_ENVIRONMENT" ]; then
-  echo "Error: API_ENVIRONMENT is not set."
-  exit 1
-fi
+REQUIRED_VARS=(API_ENVIRONMENT BASE_URL API_KEY PRIVATE_KEY GUKN_API_KEY NHS_APP_USERNAME NHS_APP_PASSWORD NHS_APP_OTP ENVIRONMENT)
+for VAR in "${REQUIRED_VARS[@]}"; do
+  if [ -z "${!VAR:-}" ]; then
+    echo "Error: $VAR is not set."
+    exit 1
+  fi
+done
 
-source bash_assume_role.sh ${API_ENVIRONMENT} ./scripts
+lower_env="$(echo "$ENVIRONMENT" | tr '[:upper:]' '[:lower:]')"
+source bash_assume_role.sh ${lower_env} ./scripts
 
 python -m venv .venv
 
