@@ -2,6 +2,12 @@
 
 set -uo pipefail
 
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <account_id>" >&2
+  exit 1
+fi
+account_id="$1"
+
 REQUIRED_VARS=(API_ENVIRONMENT BASE_URL API_KEY PRIVATE_KEY GUKN_API_KEY NHS_APP_USERNAME NHS_APP_PASSWORD NHS_APP_OTP ENVIRONMENT)
 for VAR in "${REQUIRED_VARS[@]}"; do
   if [ -z "${!VAR:-}" ]; then
@@ -10,8 +16,7 @@ for VAR in "${REQUIRED_VARS[@]}"; do
   fi
 done
 
-lower_env="$(echo "$ENVIRONMENT" | tr '[:upper:]' '[:lower:]')"
-source bash_assume_role.sh ${lower_env} ./scripts
+source bash_assume_role.sh ${account_id} ./scripts
 
 python -m venv .venv
 
