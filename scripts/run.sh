@@ -8,7 +8,7 @@ if [ "$#" -lt 1 ]; then
 fi
 account_id="$1"
 
-REQUIRED_VARS=(API_ENVIRONMENT BASE_URL API_KEY PRIVATE_KEY GUKN_API_KEY NHS_APP_USERNAME NHS_APP_PASSWORD NHS_APP_OTP ENVIRONMENT)
+REQUIRED_VARS=(API_ENVIRONMENT BASE_URL API_KEY PRIVATE_KEY_CONTENTS GUKN_API_KEY NHS_APP_USERNAME NHS_APP_PASSWORD NHS_APP_OTP ENVIRONMENT)
 for VAR in "${REQUIRED_VARS[@]}"; do
   if [ -z "${!VAR:-}" ]; then
     echo "Error: $VAR is not set."
@@ -17,6 +17,10 @@ for VAR in "${REQUIRED_VARS[@]}"; do
 done
 
 source bash_assume_role.sh ${account_id} ./scripts
+
+head -1 $PRIVATE_KEY_CONTENTS
+echo $PRIVATE_KEY_CONTENTS > ./private_key.pem
+export PRIVATE_KEY=./private_key.pem
 
 python -m venv .venv
 
