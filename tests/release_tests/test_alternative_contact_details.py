@@ -57,7 +57,7 @@ def test_alternative_contact_details(api_client):
     ]
 
     body = api_helper.construct_batch_message_body(test_users)
-    api_helper.send_and_verify_message_batch_request(body, test_users, NHS_NUMBER_GUKN_LETTER)
+    api_helper.send_and_verify_message_batch_request(body, test_users)
 
     UserData.enrich_test_data(aws_client, test_users)
 

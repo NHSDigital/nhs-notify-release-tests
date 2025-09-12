@@ -33,7 +33,7 @@ def test_failure_scenarios(api_client):
     ]
 
     body = api_helper.construct_batch_message_body(test_users)
-    api_helper.send_and_verify_message_batch_request(body, test_users, NHS_NUMBER_NO_VALID_PLANS, status='failed')
+    api_helper.send_and_verify_message_batch_request(body, test_users, status='failed')
 
     for user in test_users:
         failure_reason_found = False
