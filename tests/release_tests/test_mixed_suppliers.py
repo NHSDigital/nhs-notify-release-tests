@@ -30,7 +30,7 @@ def test_batch_message(api_client):
     ]
 
     body = api_helper.construct_batch_message_body(test_users)
-    api_helper.send_and_verify_message_batch_request(body, test_users, NHS_NUMBER_PP_LETTER)
+    api_helper.send_and_verify_message_batch_request(body, test_users)
 
     nhs_app_journey.nhs_app_login_and_view_message(
         personalisation=UserData.get_by_nhs_number(NHS_NUMBER_NHSAPP, test_users).personalisation)

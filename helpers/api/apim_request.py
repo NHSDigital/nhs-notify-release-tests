@@ -66,16 +66,17 @@ class APIHelper:
             body['data']['attributes']['recipient']['contactDetails'] = user.contact_detail
         return body
 
-    def send_and_verify_message_batch_request(self, body, test_users, poll_user, status='sending'):
+    def send_and_verify_message_batch_request(self, body, test_users, status=['sending', 'delivered']):
         response = self.send_batch_message(body)
         assert response.status_code == 201
         message_items = response.json()['data']['attributes']['messages']
         logger.info("Batch message sent successfully")
 
         UserData.update_request_items(test_users, message_items)
-        self.poll_for_message_status(UserData.get_by_nhs_number(poll_user, test_users).request_item, status)
+        for poll_user in test_users:
+            self.poll_for_message_status(UserData.get_by_nhs_number(poll_user.nhs_number, test_users).request_item, status)
         logger.info(f"Messages are in a '{status}' state")
-    
+
     def send_and_verify_single_message_request(self, body, user, status='sending'):
         response = self.send_single_message(body)
         assert response.status_code == 201
@@ -104,7 +105,7 @@ class APIHelper:
         while time.time() < end_time:
             response = self.get_message(message_id)
             status = response.json()["data"]["attributes"]["messageStatus"]
-            if status == expected_status:
+            if status in expected_status:
                 return status
             time.sleep(10)
         raise TimeoutError(f"Polling timeout. Final status: {status}")
