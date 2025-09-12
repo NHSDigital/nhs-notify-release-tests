@@ -16,11 +16,21 @@ for VAR in "${REQUIRED_VARS[@]}"; do
   fi
 done
 
-source bash_assume_role.sh ${account_id} ./scripts
+# Echo each required variable individually for debug
+for VAR in "${REQUIRED_VARS[@]}"; do
+  if [ "$VAR" != "PRIVATE_KEY_CONTENTS" ]; then
+    echo "$VAR: ${!VAR}"
+  fi
+done
 
-head -1 $PRIVATE_KEY_CONTENTS
-echo $PRIVATE_KEY_CONTENTS > ./private_key.pem
-export PRIVATE_KEY=./private_key.pem
+source ./scripts/bash_assume_role.sh ${account_id} ./scripts
+
+# Echo first line of PRIVATE_KEY_CONTENTS
+echo $PRIVATE_KEY_CONTENTS
+echo $PRIVATE_KEY_CONTENTS > ./private.key
+cat ./private.key
+
+export PRIVATE_KEY=./private.key
 
 python -m venv .venv
 
