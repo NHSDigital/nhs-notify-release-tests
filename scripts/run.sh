@@ -45,6 +45,8 @@ done
 if [ ${#missing_vars[@]} -ne 0 ]; then
   echo "Error: The following required variables are not set: ${missing_vars[*]}" >&2
   exit 1
+else
+  echo "All required environment variables are set."
 fi
 
 # Set up Python virtual environment and install dependencies
