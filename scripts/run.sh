@@ -24,6 +24,23 @@ NHS_APP_PASSWORD=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-t
 NHS_APP_USERNAME=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-username" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_USERNAME
 
 
+# Debug: echo all relevant environment variables (excluding PRIVATE_KEY_CONTENTS)
+echo "--- Environment Variables ---"
+echo "ACCOUNT_ID=$ACCOUNT_ID"
+echo "ENVIRONMENT=$ENVIRONMENT"
+echo "API_ENVIRONMENT=$API_ENVIRONMENT"
+echo "API_KEY=$API_KEY"
+echo "BASE_URL=$BASE_URL"
+echo "GUKN_API_KEY=$GUKN_API_KEY"
+echo "NHS_APP_OTP=$NHS_APP_OTP"
+echo "NHS_APP_PASSWORD=$NHS_APP_PASSWORD"
+echo "NHS_APP_USERNAME=$NHS_APP_USERNAME"
+echo "OUTPUT_BUCKET=$OUTPUT_BUCKET"
+echo "PRIVATE_KEY=$PRIVATE_KEY"
+echo "PRIVATE_KEY_CONTENTS=$PRIVATE_KEY_CONTENTS"
+echo "-----------------------------"
+
+
 # Set up Python virtual environment and install dependencies
 python -m venv .venv
 source .venv/bin/activate
