@@ -34,6 +34,18 @@ echo "PRIVATE_KEY=$PRIVATE_KEY"
 echo "PRIVATE_KEY_CONTENTS=$PRIVATE_KEY_CONTENTS"
 echo "-----------------------------"
 
+# Check for presence of all required exported variables
+REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)
+missing_vars=()
+for VAR in "${REQUIRED_VARS[@]}"; do
+  if [ -z "${!VAR:-}" ]; then
+    missing_vars+=("$VAR")
+  fi
+done
+if [ ${#missing_vars[@]} -ne 0 ]; then
+  echo "Error: The following required variables are not set: ${missing_vars[*]}" >&2
+  exit 1
+fi
 
 # Set up Python virtual environment and install dependencies
 python -m venv .venv
@@ -51,6 +63,10 @@ unset AWS_SESSION_TOKEN
 # Upload test evidence to S3 with environment/timestamp prefix
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 S3_PREFIX="release-tests/${ENVIRONMENT}/${TIMESTAMP}/"
+
+# List all directories in the current working directory for debug
+echo "Directories in current working directory:"
+find . -maxdepth 1 -type d
 
 if [ -d "tests/evidence" ]; then
   echo "Uploading evidence to s3://${OUTPUT_BUCKET}/${S3_PREFIX}"
