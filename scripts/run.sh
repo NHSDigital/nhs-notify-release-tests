@@ -2,15 +2,6 @@
 
 set -uo pipefail
 
-
-# Write private key contents to file and export its path
-# PRIVATE_KEY_CONTENTS should be set in the environment
-# PRIVATE_KEY_CONTENTS exists in MGMT.
-PRIVATE_KEY_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/private-key" --with-decryption --query "Parameter.Value" --output text) && export PRIVATE_KEY_CONTENTS
-echo $PRIVATE_KEY_CONTENTS > ./private.key
-export PRIVATE_KEY=./private.key
-
-
 # Assume AWS role for the given account
 source ./scripts/bash_assume_role.sh ${ACCOUNT_ID} ./scripts
 
@@ -22,6 +13,9 @@ GUKN_API_KEY=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests
 NHS_APP_OTP=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-otp" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_OTP
 NHS_APP_PASSWORD=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-password" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_PASSWORD
 NHS_APP_USERNAME=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-username" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_USERNAME
+PRIVATE_KEY_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/private-key" --with-decryption --query "Parameter.Value" --output text) && export PRIVATE_KEY_CONTENTS
+echo $PRIVATE_KEY_CONTENTS > ./private.key
+export PRIVATE_KEY=./private.key
 
 
 # Debug: echo all relevant environment variables (excluding PRIVATE_KEY_CONTENTS)
