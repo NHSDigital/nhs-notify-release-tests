@@ -45,10 +45,6 @@ unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 S3_PREFIX="release-tests/${ENVIRONMENT}/${TIMESTAMP}/"
 
-# List all directories in the current working directory for debug
-echo "Directories in current working directory:"
-find . -maxdepth 1 -type d
-
 if [ -d "tests/evidence" ]; then
   echo "Uploading evidence to s3://${OUTPUT_BUCKET}/${S3_PREFIX}"
   aws s3 cp tests/evidence/ "s3://${OUTPUT_BUCKET}/${S3_PREFIX}" --recursive
