@@ -33,17 +33,13 @@ else
 fi
 
 # Set up Python virtual environment and install dependencies
-python -m venv .venv
-source .venv/bin/activate
-poetry install
-
-# Run tests
-poetry run pytest
+python -m venv .venv \
+  && source .venv/bin/activate \
+  && poetry install \
+  && poetry run pytest
 
 # Unset AWS credentials to drop back to default profile
-unset AWS_ACCESS_KEY_ID
-unset AWS_SECRET_ACCESS_KEY
-unset AWS_SESSION_TOKEN
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 
 # Upload test evidence to S3 with environment/timestamp prefix
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
