@@ -17,23 +17,6 @@ PRIVATE_KEY_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/relea
 echo $PRIVATE_KEY_CONTENTS > ./private.key
 export PRIVATE_KEY=./private.key
 
-
-# Debug: echo all relevant environment variables (excluding PRIVATE_KEY_CONTENTS)
-echo "--- Environment Variables ---"
-echo "ACCOUNT_ID=$ACCOUNT_ID"
-echo "ENVIRONMENT=$ENVIRONMENT"
-echo "API_ENVIRONMENT=$API_ENVIRONMENT"
-echo "API_KEY=$API_KEY"
-echo "BASE_URL=$BASE_URL"
-echo "GUKN_API_KEY=$GUKN_API_KEY"
-echo "NHS_APP_OTP=$NHS_APP_OTP"
-echo "NHS_APP_PASSWORD=$NHS_APP_PASSWORD"
-echo "NHS_APP_USERNAME=$NHS_APP_USERNAME"
-echo "OUTPUT_BUCKET=$OUTPUT_BUCKET"
-echo "PRIVATE_KEY=$PRIVATE_KEY"
-echo "PRIVATE_KEY_CONTENTS=$PRIVATE_KEY_CONTENTS"
-echo "-----------------------------"
-
 # Check for presence of all required exported variables
 REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)
 missing_vars=()
