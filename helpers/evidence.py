@@ -8,9 +8,9 @@ def save_evidence(response, evidence_location):
     ext = os.path.splitext(evidence)[1].lower()
 
     if ext == ".json":
-        with open(evidence, "w") as f:
+        with open(evidence, "w", encoding="utf-8") as f:
             f.write(json.dumps(response, indent=2))
-    elif ext in [".pdf", ".png"]:
+    elif ext in [".pdf", ".png", ".tgz", ".tar", ".zip"]:
         if hasattr(response, "getvalue"):
             data = response.getvalue()
         else:
