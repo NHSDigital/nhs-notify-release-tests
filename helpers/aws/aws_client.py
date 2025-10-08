@@ -3,6 +3,8 @@ from helpers.aws.clients.s3_client import S3Client
 from helpers.aws.clients.lambda_client import LambdaClient
 from helpers.logger import get_logger
 from helpers.evidence import save_evidence
+from datetime import datetime
+
 
 logger = get_logger(__name__)
 
@@ -85,7 +87,7 @@ class AWSClient:
     def verify_precision_proco_letter(self, user):
         bucket_name = "comms-736102632839-eu-west-2-uat-api-lspl-letter-csv"
         file = f"PRECISIONPROCO/uploaded/pp-release-testing/{user.batch_id}.csv" 
-        content = self.get_s3_object(bucket_name, file)
+        content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
         save_evidence(content, f"{user.personalisation}/precision_proco_letter.csv")
         logger.info(f"Verified Precision Proco letter for user {user.nhs_number}")
@@ -93,7 +95,7 @@ class AWSClient:
     def verify_mba_letter(self, user):
         bucket_name = "comms-736102632839-eu-west-2-uat-api-lspl-letter-csv"       
         file = f"MBA/uploaded/hh-release-testing/{user.batch_id}.csv"
-        content = self.get_s3_object(bucket_name, file)
+        content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
         save_evidence(content, f"{user.personalisation}/mba.csv")
         logger.info(f"Verified MBA letter for user {user.nhs_number}")
@@ -101,7 +103,26 @@ class AWSClient:
     def verify_synertec_letter(self, user):
         bucket_name = "comms-736102632839-eu-west-2-uat-api-lspl-letter-csv"
         file = f"SYNERTEC/uploaded/synertec-release-testing/{user.batch_id}.csv"
-        content = self.get_s3_object(bucket_name, file)
+        content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
         save_evidence(content, f"{user.personalisation}/synertec.csv")
         logger.info(f"Verified Synertec letter for user {user.nhs_number}")
+
+    def verify_pdf_rendering_letter_test_account(self, user):
+        bucket_name = "comms-736102632839-eu-west-2-uat-api-stg-pdf-pipeline"
+        prefix = "PRERENDERMOCK/batches/"
+        response = self.list_s3_bucket_contents(bucket_name=bucket_name, prefix=prefix)
+        #Get the most recent file
+        latest = max(response, key=lambda x: x["LastModified"])
+        content = self.get_s3_object(bucket_name, latest["Key"])
+        save_evidence(content, f"{user.personalisation}/test_pdf_rendering_letter.tgz")
+
+    def verify_pdf_rendering_letter_mgmt_account(self, user):
+        date = datetime.now().strftime("%Y-%m-%d")
+        bucket_name = "comms-pl-886194799418-eu-west-2-pl-mgmt-acct-sftpdev-sftpdev"
+        prefix = f"PRERENDERMOCK/Incoming/uat/apim_integration_test_client_id_ReleaseTesting/BSL/{date}/"
+        response = self.list_s3_bucket_contents(bucket_name=bucket_name, prefix=prefix)
+        #Get the most recent file
+        latest = max(response, key=lambda x: x["LastModified"])
+        content = self.get_s3_object(bucket_name, latest["Key"])
+        save_evidence(content, f"{user.personalisation}/mgmt_pdf_rendering_letter.tgz")

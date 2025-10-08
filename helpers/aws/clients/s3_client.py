@@ -1,5 +1,4 @@
 import boto3
-from botocore.exceptions import ClientError
 from helpers.logger import get_logger
 
 logger = get_logger(__name__)
@@ -13,4 +12,4 @@ class S3Client:
 
     def get_object(self, bucket_name, key):
         response = self.client.get_object(Bucket=bucket_name, Key=key)
-        return response['Body'].read().decode('utf-8')
+        return response['Body'].read()
