@@ -46,7 +46,7 @@ Copy example.env to a .env file and populate values
 
 Create a file called `dev-private.key` and populate it with the value of the dev private key
 
-Create a file valled `client_config.json` and populate it with the value of the mesh cli client config file (See packages/libs/README in comms-mgr)
+Create a file valled `client_config.json` and populate it with the value of the mesh cli client config file
 
 Export environment variables
 ```

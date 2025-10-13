@@ -15,5 +15,5 @@ def bash_command(command):
         return output.stdout
 
     except subprocess.CalledProcessError as e:
-        logger.error("❌ Command failed with exit code %d", e.returncode)
+        logger.error("Command failed with exit code %d", e.returncode)
         logger.error("Output: %s", e.output)
