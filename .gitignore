@@ -5,3 +5,5 @@ __pycache__
 .env
 dev-private.key
 tests/evidence
+client_config.json
+helpers/mesh-cli/*
