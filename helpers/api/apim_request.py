@@ -73,9 +73,13 @@ class APIHelper:
         logger.info("Batch message sent successfully")
 
         UserData.update_request_items(test_users, message_items)
+<<<<<<< HEAD
         for poll_user in test_users:
             self.poll_for_message_status(UserData.get_by_nhs_number(poll_user.nhs_number, test_users).request_item, status)
         logger.info(f"Messages are in a '{status}' state")
+=======
+        self.poll_test_users_for_status(test_users, status)
+>>>>>>> 70b2fc7 (CCM-10060: Fix broken link to status poller)
 
     def send_and_verify_single_message_request(self, body, user, status='sending'):
         response = self.send_single_message(body)
