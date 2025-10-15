@@ -73,9 +73,7 @@ class APIHelper:
         logger.info("Batch message sent successfully")
 
         UserData.update_request_items(test_users, message_items)
-        for poll_user in test_users:
-            self.poll_for_message_status(UserData.get_by_nhs_number(poll_user.nhs_number, test_users).request_item, status)
-        logger.info(f"Messages are in a '{status}' state")
+        UserData.poll_test_users_for_status(self, test_users, status)
 
     def send_and_verify_single_message_request(self, body, user, status='sending'):
         response = self.send_single_message(body)
@@ -86,6 +84,11 @@ class APIHelper:
         UserData.update_request_item(user, request_id)
         self.poll_for_message_status(request_id, status)
         logger.info(f"Message is in a '{status}' state")
+
+    def poll_test_users_for_status(self, test_users, status):
+        for poll_user in test_users:
+            self.poll_for_message_status(UserData.get_by_nhs_number(poll_user.nhs_number, test_users).request_item, status)
+            logger.info(f"Message for {poll_user.nhs_number} is in a '{status}' state")
 
     def poll_all_users_for_delivered(self, test_users):
         for user in test_users:

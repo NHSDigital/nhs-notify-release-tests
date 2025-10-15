@@ -1,5 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Attr
 from helpers.logger import get_logger
 
 logger = get_logger(__name__)
@@ -24,3 +25,27 @@ class DynamoDBClient:
     def put_item(self, table_name, item):
         table = self.resource.Table(table_name)
         table.put_item(Item=item)
+
+    def get_items_by_request_id(self, table_name, request_id, nhs_number):
+        table = self.resource.Table(table_name)
+
+        items = []
+        scan_kwargs = {
+            "FilterExpression": (
+                Attr("requestId").eq(request_id) &
+                Attr("SK").begins_with("REQUEST_ITEM#") &
+                Attr("nhsNumber").eq(nhs_number)
+            ),
+            "ProjectionExpression": "#pk",
+            "ExpressionAttributeNames": {"#pk": "PK"},
+        }
+
+        while True:
+            response = table.scan(**scan_kwargs)
+            items.extend(response.get("Items", []))
+
+            if "LastEvaluatedKey" not in response:
+                break
+            scan_kwargs["ExclusiveStartKey"] = response["LastEvaluatedKey"]
+
+        return [item["PK"] for item in items if "PK" in item]

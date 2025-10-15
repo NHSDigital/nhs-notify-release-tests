@@ -24,3 +24,16 @@ PDF_RENDERING_ROUTING_CONFIGURATION="1962c467-0000-0000-0000-3fa5cee00393"
 PARALLEL_SEND_ROUTING_CONFIGURATION="1962c467-0000-0000-0000-3fa5cee00394"
 
 PATH_TO_EVIDENCE = "tests/evidence"
+
+CSV_HEADERS = [
+    "requestItemRefId",
+    "nhsNumber",
+    "personalisation_exampleParameter",
+    "originator_odsCode",
+    "recipient_contactDetails_email",
+    "recipient_contactDetails_sms",
+    "recipient_contactDetails_address_lines1",
+    "recipient_contactDetails_address_lines2",
+    "recipient_contactDetails_address_lines3",
+    "recipient_contactDetails_address_postcode"
+]
