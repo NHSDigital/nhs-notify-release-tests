@@ -1,6 +1,5 @@
 from typing import List, Optional
 from datetime import datetime
-from helpers.aws import aws_client
 from helpers.logger import get_logger
 from helpers.constants import API_ROUTING_CONFIGURATION_ALL_CHANNELS_CASCADE
 

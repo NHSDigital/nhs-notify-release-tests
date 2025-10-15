@@ -5,7 +5,6 @@ from helpers.aws.aws_client import AWSClient
 from helpers.api.apim_request import APIHelper
 from helpers.api.govuk_notify import verify_email_content, verify_sms_content, verify_gukn_letter
 from helpers.generators import Generators
-from helpers.logger import get_logger
 from helpers.mesh.mesh_helper import MeshHelper
 from helpers.ui import nhs_app_journey
 from helpers.constants import (
@@ -123,7 +122,7 @@ def test_mesh(api_client):
 
     mesh_helper.send_message("helpers/mesh-cli/sample_data.csv")
     aws_client.trigger_lambda("comms-uat-api-mpl-meshpoll")
-    
+
     request_id = mesh_helper.retrieve_request_id()
     UserData.set_request_items_from_request_id(aws_client, test_users, request_id)
     api_helper.poll_test_users_for_status(test_users, ["sending", "delivered"])

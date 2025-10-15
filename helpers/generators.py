@@ -99,17 +99,14 @@ class Generators():
 
     @staticmethod
     def _map_user_to_csv_row(data: dict) -> dict:
-        # Safe extraction helpers
         get = lambda key, default="": data.get(key, default)
 
-        # Contact details may be nested
         contact = get("contact_detail", {}) or {}
         address = contact.get("address", {}) or {}
         address_lines = address.get("lines", ["", "", ""])
         while len(address_lines) < 3:
-            address_lines.append("")  # pad to 3 lines
+            address_lines.append("") 
 
-        # Personalisation can be string or dict
         personalisation = get("personalisation", "")
         personalisation_value = str(personalisation)
 

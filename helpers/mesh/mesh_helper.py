@@ -1,4 +1,3 @@
-
 import re
 import time
 from helpers.bash import bash_command
