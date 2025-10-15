@@ -13,10 +13,12 @@ GUKN_API_KEY=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests
 NHS_APP_OTP=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-otp" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_OTP
 NHS_APP_PASSWORD=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-password" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_PASSWORD
 NHS_APP_USERNAME=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-username" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_USERNAME
-MESH_CLIENT_CONFIG=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/mesh-client-config" --with-decryption --query "Parameter.Value" --output text) && export MESH_CLIENT_CONFIG
 PRIVATE_KEY_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/private-key" --with-decryption --query "Parameter.Value" --output text) && export PRIVATE_KEY_CONTENTS
 echo $PRIVATE_KEY_CONTENTS > ./private.key
 export PRIVATE_KEY=./private.key
+MESH_CLIENT_CONFIG_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/mesh-client-config" --with-decryption --query "Parameter.Value" --output text) && export MESH_CLIENT_CONFIG_CONTENTS
+echo $MESH_CLIENT_CONFIG_CONTENTS > ./client_config.json
+export MESH_CLIENT_CONFIG=./client_config
 
 # Check for presence of all required exported variables
 REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME MESH_CLIENT_CONFIG OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)

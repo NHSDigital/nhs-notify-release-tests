@@ -59,11 +59,17 @@ class AWSClient:
         logger.info("Triggered all letter polling lambdas")
 
     def query_dynamodb_by_request_item(self, request_item):
+        if "REQUEST_ITEM#" in request_item:
+            request_item = request_item.split("#")[1]
         table_name = "comms-uat-api-stg-comms-mgr"
         key_condition = "PK = :PK"
         expression_values = {":PK": {"S": f"REQUEST_ITEM#{request_item}"}}
         response = self.dynamo.query(table_name, key_condition, expression_values)
         return response
+
+    def get_items_by_request_id(self, request_id, nhs_number):
+        table_name = "comms-uat-api-stg-comms-mgr"
+        return self.dynamo.get_items_by_request_id(table_name, request_id, nhs_number)
 
     def list_s3_bucket_contents(self, bucket_name, prefix=""):
         response = self.s3.list_objects(bucket_name, prefix)

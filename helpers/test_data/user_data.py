@@ -1,5 +1,6 @@
 from typing import List, Optional
 from datetime import datetime
+from helpers.aws import aws_client
 from helpers.logger import get_logger
 from helpers.constants import API_ROUTING_CONFIGURATION_ALL_CHANNELS_CASCADE
 
@@ -71,7 +72,14 @@ class UserData:
     @staticmethod
     def update_contact_detail(user, contact_detail):
         user.contact_detail = contact_detail
-        
+
+    @staticmethod
+    def set_request_items_from_request_id(aws_client, test_users, request_id):
+        for user in test_users:
+            request_item = aws_client.get_items_by_request_id(request_id, user.nhs_number)[0]   
+            user.request_item = request_item.split("#")[-1]
+            logger.info(f"Mapped request item {user.request_item} to user {user.nhs_number}")
+
     @staticmethod
     def enrich_test_data(aws_client, test_users):
         for user in test_users:
