@@ -73,7 +73,7 @@ class APIHelper:
         logger.info("Batch message sent successfully")
 
         UserData.update_request_items(test_users, message_items)
-        UserData.poll_test_users_for_status(self, test_users, status)
+        self.poll_test_users_for_status(test_users, status)
 
     def send_and_verify_single_message_request(self, body, user, status='sending'):
         response = self.send_single_message(body)

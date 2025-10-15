@@ -33,7 +33,7 @@ class MeshHelper:
 
         match = re.search(r'"requestId":"([^"]+)"', output)
         if not match:
-            raise ValueError("Could not extract requestId from MESH retrieve output")
+            raise ValueError(f"Could not extract requestId from MESH retrieve output: {output}")
 
         request_id = match.group(1)
         self.logger.info(f"Retrieved MESH requestId: {request_id}")
