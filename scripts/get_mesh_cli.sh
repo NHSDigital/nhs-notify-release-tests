@@ -8,7 +8,7 @@ else
     # Variables
     REPO_URL="https://github.com/NHSDigital/comms-mgr.git"
     PACKAGE_DIR="packages/libs/mesh-cli"
-    TARGET_DIR="/helpers/mesh-cli"
+    TARGET_DIR="helpers/mesh-cli"
     BRANCH="${4:-main}"
 
     # Create a temporary directory
