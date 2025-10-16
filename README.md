@@ -83,5 +83,5 @@ Run Tests
 
 Run all tests
 ```
-poetry run pytest
+poetry run pytest --html=tests/evidence/report.html --self-contained-html
 ````

@@ -3,12 +3,13 @@ import io
 from pprint import pprint
 from helpers.api.authentication import AuthenticationCache
 from helpers.api.api_client import ApiClient
-from helpers.logger import configure_logging
+from helpers.logger import get_logger, configure_logging
 from dotenv import load_dotenv
 import os
 
 load_dotenv()  # Automatically loads from .env in project root or cwd
 configure_logging() # Set up logging configuration
+logger = get_logger("pytest")
 
 """
 https://docs.pytest.org/en/latest/how-to/writing_plugins.html#assertion-rewriting
@@ -89,3 +90,15 @@ def headers(bearer_token):
 @pytest.fixture
 def api_client(url, headers):
     return ApiClient(url, headers)
+
+def pytest_runtest_logreport(report):
+    """Log test results after each phase."""
+    if report.when == "call":  # only log after actual test run, not setup/teardown
+        test_name = report.nodeid
+
+        if report.failed:
+            logger.error(f"❌ Test FAILED: {test_name} - {report.longrepr}")
+        elif report.passed:
+            logger.info(f"✅ Test PASSED: {test_name}")
+        elif report.skipped:
+            logger.warning(f"⚠️ Test SKIPPED: {test_name}")

@@ -39,7 +39,7 @@ fi
 python -m venv .venv \
   && source .venv/bin/activate \
   && poetry install \
-  && poetry run pytest
+  && poetry run pytest --html=tests/evidence/report.html --self-contained-html --capture=tee-sys
 
 # Unset AWS credentials to drop back to default profile
 unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
