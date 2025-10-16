@@ -18,7 +18,7 @@ echo $PRIVATE_KEY_CONTENTS > ./private.key
 export PRIVATE_KEY=./private.key
 MESH_CLIENT_CONFIG_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/mesh-client-config" --with-decryption --query "Parameter.Value" --output text) && export MESH_CLIENT_CONFIG_CONTENTS
 echo $MESH_CLIENT_CONFIG_CONTENTS > ./client_config.json
-export MESH_CLIENT_CONFIG=./client_config
+export MESH_CLIENT_CONFIG=./client_config.json
 
 # Check for presence of all required exported variables
 REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME MESH_CLIENT_CONFIG OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)
