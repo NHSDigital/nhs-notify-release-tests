@@ -13,6 +13,7 @@ def bash_command(command):
             text=True,
             check=True
         )
+        logger.info(f"Executed command:\n{command}\nOutput:\n{output.stdout.strip()}")
         return output.stdout.strip()
 
     except subprocess.CalledProcessError as e:

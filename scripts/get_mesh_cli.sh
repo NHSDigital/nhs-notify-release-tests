@@ -1,6 +1,4 @@
 #!/bin/bash
-# Usage: ./import_package.sh <repo_url> <package_dir_in_repo> <target_dir_in_current_repo> [branch]
-
 #Check if directory exists already
 if [ -d "helpers/mesh-cli" ]; then
   echo "Directory already exists"
@@ -15,18 +13,17 @@ else
     TEMP_DIR=$(mktemp -d)
     cd "$TEMP_DIR" || exit 1
 
-    # Initialize empty git repo quietly
-    git init -q
+    # Initialize empty git repo
+    git init
 
-    # Add remote quietly
+    # Add remote
     git remote add origin "$REPO_URL"
 
-    # Enable sparse checkout quietly
+    # Enable sparse checkout
     git sparse-checkout init --cone
     git sparse-checkout set "$PACKAGE_DIR" >/dev/null 2>&1
 
-    # Pull only the branch quietly
-    git pull --quiet origin "$BRANCH"
+    git pull origin "$BRANCH"
 
     # Copy package into existing repo
     mkdir -p "$OLDPWD/$TARGET_DIR"
