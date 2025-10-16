@@ -10,10 +10,14 @@ def bash_command(command):
         output = subprocess.run(
             ["bash", "-c", command],
             capture_output=True,
-            text=True
+            text=True,
+            check=True
         )
-        return output.stdout
+        return output.stdout.strip()
 
     except subprocess.CalledProcessError as e:
-        logger.error("Command failed with exit code %d", e.returncode)
-        logger.error("Output: %s", e.output)
+        logger.error(f"Command failed: {command}")
+        logger.error(f"Exit code: {e.returncode}")
+        logger.error(f"Stdout: {e.stdout}")
+        logger.error(f"Stderr: {e.stderr}")
+        raise
