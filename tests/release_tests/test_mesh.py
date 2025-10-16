@@ -19,6 +19,8 @@ from helpers.constants import (
 
 def test_mesh(api_client):
     bash_command("scripts/get_mesh_cli.sh")
+    bash_command("source .venv/bin/activate")
+
     api_helper = APIHelper(api_client)
     aws_client = AWSClient()
     mesh_helper = MeshHelper()
