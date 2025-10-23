@@ -18,7 +18,7 @@ def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation
         page.goto("https://www-onboardingaos.nhsapp.service.nhs.uk/login")
         logger.info("Accessed NHS App Onboarding AOS")
 
-        expect(page.get_by_role("heading", name="Access your NHS services")).to_be_visible()
+        expect(page.get_by_role("heading", name="Use NHS App services", exact=True)).to_be_visible()
         page.get_by_role("button", name="Continue").click()
         logger.info("Continuing on to username page")
 
