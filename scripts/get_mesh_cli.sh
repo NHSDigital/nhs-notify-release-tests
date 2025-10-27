@@ -1,7 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-REPO_URL="https://github.com/NHSDigital/comms-mgr.git"
+if [ -n "$GH_TOKEN" ]; then
+  REPO_URL="https://$GH_TOKEN@github.com/NHSDigital/comms-mgr.git"
+else 
+  REPO_URL="https://github.com/NHSDigital/comms-mgr.git"
+fi
+
 PACKAGE_DIR="packages/libs/mesh-cli"
 TARGET_DIR="helpers/mesh-cli"
 BRANCH="${4:-main}"
