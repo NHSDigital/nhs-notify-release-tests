@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ###
-# NOTE: _SOURCE_ this file in order to switch to the COMMSTestExecution role in the correct account
+# NOTE: _SOURCE_ this file in order to switch to the COMMSAppDeployer role in the correct account
 ###
 
 set -uo pipefail
@@ -23,7 +23,7 @@ fi
 echo "Account ID is: ${account_id}"
 
 # Construct App Deployer role ARN
-app_deployer_role_arn="arn:aws:iam::${account_id}:role/COMMSTestExecution"
+app_deployer_role_arn="arn:aws:iam::${account_id}:role/COMMSAppDeployer"
 
 # Attempt to assume role
 if ! session_tokens=($(aws sts assume-role \
