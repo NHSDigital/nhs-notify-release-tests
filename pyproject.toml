@@ -14,13 +14,13 @@ install-playwright = "^0.1.1"
 notifications-python-client = "^10.0.1"
 cryptography = "^46.0.3"
 python-dotenv = "^1.1.1"
-pytest = "^8.4.2"
+pytest = "^9.0.0"
 dotenv = "^0.9.9"
 pytest-html = "^4.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.2"
+pytest = "^9.0.0"
 
 [build-system]
 requires = ["poetry-core"]
