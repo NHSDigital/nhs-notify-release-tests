@@ -12,8 +12,8 @@ def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation
         install(playwright.chromium)
         browser = playwright.chromium.launch()
         page = browser.new_page()
-        page.set_default_timeout(15000)
-        expect.set_options(timeout=15000)
+        page.set_default_timeout(30000)
+        expect.set_options(timeout=30000)
 
         page.goto("https://www-onboardingaos.nhsapp.service.nhs.uk/login")
         logger.info("Accessed NHS App Onboarding AOS")
@@ -22,15 +22,11 @@ def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation
         page.get_by_role("button", name="Continue").click()
         logger.info("Continuing on to username page")
 
-        expect(page.get_by_role("heading", name="Enter your email address")).to_be_visible()
-        page.get_by_label("Email address", exact=True).fill(os.environ['NHS_APP_USERNAME'])
+        expect(page.get_by_role("heading", name="Log in to NHS App")).to_be_visible()
+        page.get_by_role("textbox", name="Email address", exact=True).fill(os.environ['NHS_APP_USERNAME'])
+        page.get_by_role("textbox", name="Password", exact=True).fill(os.environ['NHS_APP_PASSWORD'])
         page.get_by_role("button", name="Continue").click()
-        logger.info("Entered username")
-
-        expect(page.get_by_role("heading", name="Enter your password")).to_be_visible()
-        page.get_by_label("Password", exact=True).fill(os.environ['NHS_APP_PASSWORD'])
-        page.get_by_role("button", name="Continue").click()
-        logger.info("Entered password")
+        logger.info("Entered username and password")
 
         expect(page.get_by_role("heading", name="Enter the security code")).to_be_visible()
         page.get_by_label("Security code", exact=True).fill(os.environ['NHS_APP_OTP'])
