@@ -3,6 +3,7 @@ import io
 from pprint import pprint
 from helpers.api.authentication import AuthenticationCache
 from helpers.api.api_client import ApiClient
+from helpers.aws.aws_client import AWSClient
 from helpers.logger import get_logger, configure_logging
 from dotenv import load_dotenv
 import os
@@ -91,9 +92,16 @@ def headers(bearer_token):
 def api_client(url, headers):
     return ApiClient(url, headers)
 
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_config():
+    aws_client = AWSClient()
+    aws_client.update_client_config()
+    aws_client.upload_templates()
+    aws_client.upload_routing_configs()
+
 def pytest_runtest_logreport(report):
     """Log test results after each phase."""
-    if report.when == "call":  # only log after actual test run, not setup/teardown
+    if report.when == "call":
         test_name = report.nodeid
 
         if report.failed:

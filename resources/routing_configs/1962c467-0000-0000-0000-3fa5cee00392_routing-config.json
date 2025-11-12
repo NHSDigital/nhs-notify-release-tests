@@ -1,0 +1,99 @@
+{
+  "sendingGroupId": "1962c467-0000-0000-0000-3fa5cee00392",
+  "sendingGroupName": "ApiReleaseTest",
+  "clientId": "apim_integration_test_client_id",
+  "dateCreated": "2024-09-16T13:37:00.000Z",
+  "campaignId": "ReleaseTesting",
+  "dateOfBirthOptional": true,
+  "schemaVersion": 2,
+  "channels": [
+    {
+      "orderNumber": 1,
+      "communicationType": "NHSAPP",
+      "channelType": "primary",
+      "maxAttemptsNumber": 3,
+      "callbackWaitTime": 84600,
+      "templates": [
+        {
+          "suppliers": {
+            "NHSAPP": "nhsapp-release-testing"
+          }
+        }
+      ]
+    },
+    {
+      "orderNumber": 2,
+      "channelType": "primary",
+      "communicationType": "EMAIL",
+      "maxAttemptsNumber": 4,
+      "templates": [
+        {
+          "suppliers": {
+            "GOVUK_NOTIFY": "email_release_testing"
+          }
+        }
+      ]
+    },
+    {
+      "orderNumber": 3,
+      "channelType": "primary",
+      "communicationType": "SMS",
+      "maxAttemptsNumber": 5,
+      "templates": [
+        {
+          "suppliers": {
+            "GOVUK_NOTIFY": "sms_release_testing"
+          }
+        }
+      ]
+    },
+    {
+      "orderNumber": 4,
+      "channelType": "primary",
+      "communicationType": "LETTER",
+      "templates": [
+        {
+          "conditions": [
+            {
+              "language": [
+                "ar"
+              ]
+            }
+          ],
+          "suppliers": {
+            "MBA": "mba-release-testing"
+          }
+        },
+        {
+          "conditions": [
+            {
+              "language": [
+                "es"
+              ]
+            }
+          ],
+          "suppliers": {
+            "SYNERTEC": "synertec-release-testing"
+          }
+        },
+        {
+          "conditions": [
+            {
+              "language": [
+                "it"
+              ]
+            }
+          ],
+          "suppliers": {
+            "PRECISIONPROCO": "precisionproco-release-testing"
+          }
+        },
+        {
+          "suppliers": {
+            "GOVUK_NOTIFY": "letter-pdf-release-testing"
+          }
+        }
+      ]
+    }
+  ]
+}

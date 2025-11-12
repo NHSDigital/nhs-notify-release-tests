@@ -13,3 +13,6 @@ class S3Client:
     def get_object(self, bucket_name, key):
         response = self.client.get_object(Bucket=bucket_name, Key=key)
         return response['Body'].read()
+
+    def upload_file(self, bucket_name, s3_file, local_file):
+        self.client.upload_file(Bucket=bucket_name, Filename=local_file, Key=s3_file)
