@@ -1,0 +1,38 @@
+{
+    "dateCreated": "2024-09-13T14:24:20.612Z",
+    "sendingGroupName": "ParallelSendReleaseTest",
+    "sendingGroupId": "1962c467-0000-0000-0000-3fa5cee00394",
+    "clientId": "apim_integration_test_client_id",
+    "campaignId": "ReleaseTesting",
+    "schemaVersion": 2,
+    "dateOfBirthOptional": true,
+    "channels": [
+        {
+            "orderNumber": 1,
+            "channelType": "primary",
+            "communicationType": "SMS",
+            "maxAttemptsNumber": 1,
+            "templates": [
+                {
+                    "suppliers": {
+                        "GOVUK_NOTIFY": "sms_release_testing"
+                    }
+                }
+            ]
+        },
+        {
+            "orderNumber": 1,
+            "channelType": "secondary",
+            "communicationType": "NHSAPP",
+            "maxAttemptsNumber": 1,
+            "templates": [
+                {
+                    "suppliers": {
+                        "NHSAPP": "nhsapp-release-testing"
+                    }
+                }
+            ],
+            "callbackWaitTime": 600
+        }
+    ]
+}
