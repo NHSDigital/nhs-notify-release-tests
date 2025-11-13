@@ -1,3 +1,4 @@
+from functools import lru_cache
 import boto3
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Attr
@@ -26,26 +27,28 @@ class DynamoDBClient:
         table = self.resource.Table(table_name)
         table.put_item(Item=item)
 
-    def get_items_by_request_id(self, table_name, request_id, nhs_number):
+    @lru_cache(maxsize=None)
+    def _get_all_items_for_request(self, table_name, request_id):
         table = self.resource.Table(table_name)
-
         items = []
         scan_kwargs = {
             "FilterExpression": (
                 Attr("requestId").eq(request_id) &
-                Attr("SK").begins_with("REQUEST_ITEM#") &
-                Attr("nhsNumber").eq(nhs_number)
+                Attr("SK").begins_with("REQUEST_ITEM#")
             ),
-            "ProjectionExpression": "#pk",
+            "ProjectionExpression": "#pk, nhsNumber",
             "ExpressionAttributeNames": {"#pk": "PK"},
         }
 
-        while True:
-            response = table.scan(**scan_kwargs)
-            items.extend(response.get("Items", []))
+        response = table.scan(**scan_kwargs)
+        items.extend(response["Items"])
 
-            if "LastEvaluatedKey" not in response:
-                break
-            scan_kwargs["ExclusiveStartKey"] = response["LastEvaluatedKey"]
+        while "LastEvaluatedKey" in response:
+            response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"], **scan_kwargs)
+            items.extend(response["Items"])
 
-        return [item["PK"] for item in items if "PK" in item]
+        return items
+
+    def _get_items_cached(self, table_name, request_id, nhs_number):
+        all_items = self._get_all_items_for_request(table_name, request_id)
+        return [item["PK"] for item in all_items if item.get("nhsNumber") == nhs_number]

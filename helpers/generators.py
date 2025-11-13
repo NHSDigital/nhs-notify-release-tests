@@ -87,6 +87,20 @@ class Generators():
             writer.writerows(rows)
 
     @staticmethod
+    def generate_quota(quota, environment):
+        return {
+            "PK": f"{quota.supplier}#{quota.communication_type}#{quota.client_id}#{quota.campaign_id}",
+            "SK": "QUOTA",
+            "initialQuota": 200000,
+            "inputQueueNames": [
+                f"comms-{environment}-api-rol-router-request-{quota.client_id.lower()}-{quota.campaign_id.lower().replace("_", "")}--{quota.communication_type.lower()}-{quota.supplier.lower().replace("govuk_", "")}.fifo"
+            ],
+            "periodMs": 86400000,
+            "priority": 0,
+            "supplier": f"{quota.supplier}"
+            }   
+
+    @staticmethod
     def _object_to_dict(obj):
         if is_dataclass(obj):
             return asdict(obj)

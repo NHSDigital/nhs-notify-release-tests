@@ -1,3 +1,4 @@
+from pyparsing import lru_cache
 from helpers.aws.clients.dynamodb_client import DynamoDBClient
 from helpers.aws.clients.s3_client import S3Client
 from helpers.aws.clients.lambda_client import LambdaClient
@@ -5,6 +6,8 @@ from helpers.aws.clients.ssm_client import SSMClient
 from helpers.constants import get_env, get_client
 from helpers.logger import get_logger
 from helpers.evidence import save_evidence
+from helpers.test_data.quota_data import QuotaData
+from helpers.generators import Generators
 from datetime import datetime
 from pathlib import Path
 import json
@@ -41,6 +44,25 @@ class AWSClient:
         }
         response = self.lambda_.invoke_lambda(lambda_name, test_event)
         return response
+
+    def create_quotas(self):
+        environment = get_env()
+        client = get_client()
+        table_name = f"comms-{environment}-api-stg-quota"
+        quotas = [
+            QuotaData(supplier="NHSAPP", communication_type="NHSAPP", client_id=client),
+            QuotaData(supplier="GOVUK_NOTIFY", communication_type="EMAIL", client_id=client),
+            QuotaData(supplier="GOVUK_NOTIFY", communication_type="SMS", client_id=client),
+            QuotaData(supplier="GOVUK_NOTIFY", communication_type="LETTER", client_id=client),
+            QuotaData(supplier="MBA", communication_type="LETTER", client_id=client),
+            QuotaData(supplier="SYNERTEC", communication_type="LETTER", client_id=client),
+            QuotaData(supplier="PRECISIONPROCO", communication_type="LETTER", client_id=client),
+            QuotaData(supplier="PRERENDERMOCK", communication_type="LETTER", client_id=client),
+        ]
+        for quota in quotas:
+            quota_body = Generators.generate_quota(quota, environment)
+            self.dynamo.put_item(table_name, quota_body)
+
 #"meshMailboxId":"ignore-apim_integration_test",
 #"meshWorkflowIdSuffix":"ignore-apim_integration_test",
 
@@ -194,12 +216,12 @@ class AWSClient:
     def get_items_by_request_id(self, request_id, nhs_number):
         environment = get_env()
         table_name = f"comms-{environment}-api-stg-comms-mgr"
-        return self.dynamo.get_items_by_request_id(table_name, request_id, nhs_number)
+        return self.dynamo._get_items_cached(table_name, request_id, nhs_number)
 
     def verify_precision_proco_letter(self, user):
         environment = get_env()
         bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-lspl-letter-csv"
-        file = f"PRECISIONPROCO/uploaded/pp-release-testing/{user.batch_id}.csv" 
+        file = f"PRECISIONPROCO/uploaded/precisionproco-release-testing/{user.batch_id}.csv" 
         content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
         save_evidence(content, f"{user.personalisation}/precision_proco_letter.csv")
@@ -208,7 +230,7 @@ class AWSClient:
     def verify_mba_letter(self, user):
         environment = get_env()
         bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-lspl-letter-csv"       
-        file = f"MBA/uploaded/hh-release-testing/{user.batch_id}.csv"
+        file = f"MBA/uploaded/mba-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
         save_evidence(content, f"{user.personalisation}/mba.csv")

@@ -107,6 +107,7 @@ def api_client(url, headers):
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_config():
     aws_client = AWSClient()
+    aws_client.create_quotas()
     aws_client.update_client_config()
     aws_client.upload_templates()
     aws_client.upload_routing_configs()

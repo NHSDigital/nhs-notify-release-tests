@@ -3,6 +3,7 @@
   "sendingGroupName": "PreRenderMockReleaseTest",
   "sendingGroupId": "1962c467-0000-0000-0000-3fa5cee00393",
   "clientId": "apim_integration_test_client_id",
+  "campaignId": "ReleaseTesting",
   "schemaVersion": 2,
   "dateOfBirthOptional": false,
   "channels": [

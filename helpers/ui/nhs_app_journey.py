@@ -3,10 +3,15 @@ from playwright.sync_api import expect, sync_playwright
 import re
 import os
 from helpers.logger import get_logger
-from helpers.constants import PATH_TO_EVIDENCE
+from helpers.constants import PATH_TO_EVIDENCE, get_env
 
-def nhs_app_login_and_view_message(ods_name="NHS ENGLAND - X26", personalisation=None):
+def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
     logger = get_logger(__name__)
+    if ods_name is None: 
+        if get_env() == "int":
+           ods_name = "NHS REFERRALS"
+        else:
+            ods_name = "NHS ENGLAND - X26"
 
     with sync_playwright() as playwright:
         install(playwright.chromium)
