@@ -1,12 +1,14 @@
 import re
 import time
+import os
 from helpers.bash import bash_command
 from helpers.logger import get_logger
+from helpers.constants import get_env
 logger = get_logger(__name__)
 
 class MeshHelper:
-    def __init__(self, mailbox_name="NHS Notify UAT"):
-        self.mailbox_name = mailbox_name
+    def __init__(self):
+        self.mailbox_name = f"NHS Notify {get_env().upper()}"
         self.logger = get_logger(__name__)
 
     def setup_cli(self):

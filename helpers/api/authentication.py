@@ -34,7 +34,7 @@ class AuthenticationCache():
 
         api_key = os.environ["API_KEY"]
         private_key = os.environ["PRIVATE_KEY"]
-        url = "https://internal-qa.api.service.nhs.uk/oauth2/token"
+        url = f"https://{os.environ.get('API_ENVIRONMENT')}.api.service.nhs.uk/oauth2/token"
         kid = "local"
 
         _, latest_token_expiry = self.tokens.get(env, (None, 0))

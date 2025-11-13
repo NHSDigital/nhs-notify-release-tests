@@ -3,7 +3,6 @@
   "sendingGroupName": "ApiReleaseTest",
   "clientId": "apim_integration_test_client_id",
   "dateCreated": "2024-09-16T13:37:00.000Z",
-  "campaignId": "ReleaseTesting",
   "dateOfBirthOptional": true,
   "schemaVersion": 2,
   "channels": [

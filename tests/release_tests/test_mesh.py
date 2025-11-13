@@ -1,4 +1,5 @@
 import uuid
+import os
 from helpers.bash import bash_command
 from helpers.test_data.user_data import UserData
 from helpers.aws.aws_client import AWSClient
@@ -15,9 +16,11 @@ from helpers.constants import (
     NHS_NUMBER_MBA_LETTER,
     NHS_NUMBER_SYNERTEC_LETTER,
     NHS_NUMBER_PP_LETTER,
+    get_env
 )
 
 def test_mesh(api_client):
+    ENV = get_env()
     bash_command("scripts/get_mesh_cli.sh")
     bash_command("source .venv/bin/activate")
 
@@ -123,7 +126,7 @@ def test_mesh(api_client):
     Generators.generate_mesh_csv(test_users, "helpers/mesh-cli/sample_data.csv")
 
     mesh_helper.send_message("helpers/mesh-cli/sample_data.csv")
-    aws_client.trigger_lambda("comms-uat-api-mpl-meshpoll")
+    aws_client.trigger_lambda(f"comms-{ENV}-api-mpl-meshpoll")
 
     request_id = mesh_helper.retrieve_request_id()
     UserData.set_request_items_from_request_id(aws_client, test_users, request_id)

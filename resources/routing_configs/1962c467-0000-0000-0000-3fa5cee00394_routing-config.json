@@ -3,7 +3,6 @@
     "sendingGroupName": "ParallelSendReleaseTest",
     "sendingGroupId": "1962c467-0000-0000-0000-3fa5cee00394",
     "clientId": "apim_integration_test_client_id",
-    "campaignId": "ReleaseTesting",
     "schemaVersion": 2,
     "dateOfBirthOptional": true,
     "channels": [
