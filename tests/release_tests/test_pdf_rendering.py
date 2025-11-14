@@ -1,5 +1,4 @@
 import uuid
-
 import pytest
 from helpers.constants import NHS_NUMBER_GUKN_LETTER, PDF_RENDERING_ROUTING_CONFIGURATION
 from helpers.api.apim_request import APIHelper
