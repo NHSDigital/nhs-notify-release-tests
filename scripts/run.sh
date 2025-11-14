@@ -23,8 +23,6 @@ MESH_CLIENT_CONFIG_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT
 echo $MESH_CLIENT_CONFIG_CONTENTS > ./client_config.json
 export MESH_CLIENT_CONFIG=./client_config.json
 
-source ./scripts/get_mesh_cli.sh
-
 # Check for presence of all required exported variables
 REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME MESH_CLIENT_CONFIG OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)
 missing_vars=()
@@ -59,5 +57,3 @@ if [ -d "tests/evidence" ]; then
 else
   echo "No evidence directory found to upload."
 fi
-
-# source ./scripts/get_mesh_cli.sh
