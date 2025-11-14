@@ -35,8 +35,6 @@ def test_batch_message(api_client):
     nhs_app_journey.nhs_app_login_and_view_message(
         personalisation=UserData.get_by_nhs_number(NHS_NUMBER_NHSAPP, test_users).personalisation)
 
-    aws_client.trigger_letters_polling_lambdas()
-
     UserData.enrich_test_data(aws_client, test_users)
 
     verify_email_content(UserData.get_by_nhs_number(NHS_NUMBER_EMAIL, test_users))
@@ -45,5 +43,3 @@ def test_batch_message(api_client):
     aws_client.verify_mba_letter(UserData.get_by_nhs_number(NHS_NUMBER_MBA_LETTER, test_users))
     aws_client.verify_synertec_letter(UserData.get_by_nhs_number(NHS_NUMBER_SYNERTEC_LETTER, test_users))
     aws_client.verify_precision_proco_letter(UserData.get_by_nhs_number(NHS_NUMBER_PP_LETTER, test_users))
-
-    api_helper.poll_all_users_for_delivered(test_users)

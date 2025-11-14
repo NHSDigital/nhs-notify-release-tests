@@ -72,27 +72,29 @@ class AWSClient:
         client_config_path = f"/comms/{environment}/clients/{client}"
         if environment == "int":
             client_config_value = {
-                "allowAnonymousPatient": True,
-                "allowAlternativeContactDetails": True,
-                "allowOdsOverride": True,
                 "clientId":"apim_integration_test",
+                "name":"APIM Integration Test",
+                "allowAlternativeContactDetails": True,
+                "allowAnonymousPatient": True,
+                "allowOdsOverride": True,
                 "meshMailboxId": "X26OT282",
                 "meshWorkflowIdSuffix": "TEST",
-                "name":"APIM Integration Test",
                 "senderOdsCode":"T9A9F",
-                "allowRfrOverride": True,
-                "ignoreSecurityFlag": True
+                "allowRfrOverride": False,
+                "ignoreSecurityFlag": False
             }
         else:
             client_config_value = {
                 "clientId": client,
                 "name": "APIM Integration Test",
-                "allowOdsOverride": True,
-                "senderOdsCode":"X26",
                 "allowAlternativeContactDetails": True,
                 "allowAnonymousPatient": True,
+                "allowOdsOverride": True,
                 "meshMailboxId": "X26OT234",
-                "meshWorkflowIdSuffix": "TEST"
+                "meshWorkflowIdSuffix": "TEST",
+                "senderOdsCode":"X26",
+                "allowRfrOverride": False,
+                "ignoreSecurityFlag": False
             }
         
         ssm_value = json.dumps(client_config_value)
@@ -101,6 +103,7 @@ class AWSClient:
 
         self.lambda_.update_env_var(f'comms-{environment}-api-oa3-commsapi-apim-create-message', 'TEST_VALUE', str(uuid.uuid1()))
         self.lambda_.update_env_var(f'comms-{environment}-api-oa3-commsapi-apim-create-request', 'TEST_VALUE', str(uuid.uuid1()))
+        self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'TEST_VALUE', str(uuid.uuid1()))
         logger.info("Reset client config cache in message send lambdas")
 
     def upload_templates(self):
@@ -194,14 +197,6 @@ class AWSClient:
 
         var_value = 'debug' if enabled else 'info'
         self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'LOG_LEVEL', var_value)
-
-    def trigger_letters_polling_lambdas(self):
-        environment = get_env()
-        self.trigger_lambda(f'comms-{environment}-api-nsp-letters-notify-polling')
-        self.trigger_lambda(f'comms-{environment}-api-lspl-sftppoll')
-        self.trigger_lambda(f'comms-{environment}-api-lss-sftppollsynertec')
-        self.trigger_lambda(f'comms-{environment}-api-lspp-sftppollprecisionproco')
-        logger.info("Triggered all letter polling lambdas")
 
     def query_dynamodb_by_request_item(self, request_item):
         environment = get_env()
