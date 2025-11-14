@@ -65,6 +65,18 @@ def pytest_assertrepr_compare(op, left, right):
                 f'  {op}',
                 *right_strio.getvalue().split('\n')]
 
+@pytest.fixture(scope="session", autouse=True)
+def set_environment_variables():
+    if os.environ.get("ENVIRONMENT") == "int":
+        os.environ["API_ENVIRONMENT"] = "int"
+        os.environ["BASE_URL"] = "https://int.api.service.nhs.uk/comms"
+        os.environ["CLIENT"] = "apim_integration_test"
+    else:
+        os.environ["API_ENVIRONMENT"] = "internal-qa"
+        os.environ["BASE_URL"] = "https://internal-qa.api.service.nhs.uk/comms"
+        os.environ["CLIENT"] = "apim_integration_test_client_id"
+
+
 @pytest.fixture(scope='session')
 def authentication_cache():
     return AuthenticationCache()
@@ -95,6 +107,7 @@ def api_client(url, headers):
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_config():
     aws_client = AWSClient()
+    aws_client.create_quotas()
     aws_client.update_client_config()
     aws_client.upload_templates()
     aws_client.upload_routing_configs()

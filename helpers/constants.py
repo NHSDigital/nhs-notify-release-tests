@@ -1,3 +1,11 @@
+import os
+
+def get_env() -> str:
+    return os.environ.get("ENVIRONMENT")
+
+def get_client() -> str:
+    return os.environ.get("CLIENT")
+
 NHS_NUMBER_SMOKE_TEST="9990548609"
 NHS_NUMBER_NHSAPP="9728544030"
 NHS_NUMBER_EMAIL="9728543972"

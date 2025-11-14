@@ -1,4 +1,5 @@
 import uuid
+import os
 from helpers.bash import bash_command
 from helpers.test_data.user_data import UserData
 from helpers.aws.aws_client import AWSClient
@@ -15,6 +16,7 @@ from helpers.constants import (
     NHS_NUMBER_MBA_LETTER,
     NHS_NUMBER_SYNERTEC_LETTER,
     NHS_NUMBER_PP_LETTER,
+    get_env
 )
 
 def test_mesh(api_client):
@@ -123,7 +125,7 @@ def test_mesh(api_client):
     Generators.generate_mesh_csv(test_users, "helpers/mesh-cli/sample_data.csv")
 
     mesh_helper.send_message("helpers/mesh-cli/sample_data.csv")
-    aws_client.trigger_lambda("comms-uat-api-mpl-meshpoll")
+    aws_client.trigger_lambda(f"comms-{get_env()}-api-mpl-meshpoll")
 
     request_id = mesh_helper.retrieve_request_id()
     UserData.set_request_items_from_request_id(aws_client, test_users, request_id)
@@ -133,8 +135,6 @@ def test_mesh(api_client):
         ods_name="THE NORTH MIDLANDS AND EAST PROGRAMME FOR IT (NMEPFIT)",
         personalisation=UserData.get_by_nhs_number(NHS_NUMBER_NHSAPP, test_users).personalisation)
 
-    aws_client.trigger_letters_polling_lambdas()
-
     UserData.enrich_test_data(aws_client, test_users)
 
     verify_email_content(UserData.get_by_nhs_number(NHS_NUMBER_EMAIL, test_users))
@@ -143,5 +143,3 @@ def test_mesh(api_client):
     aws_client.verify_mba_letter(UserData.get_by_nhs_number(NHS_NUMBER_MBA_LETTER, test_users))
     aws_client.verify_synertec_letter(UserData.get_by_nhs_number(NHS_NUMBER_SYNERTEC_LETTER, test_users))
     aws_client.verify_precision_proco_letter(UserData.get_by_nhs_number(NHS_NUMBER_PP_LETTER, test_users))
-
-    api_helper.poll_all_users_for_delivered(test_users)

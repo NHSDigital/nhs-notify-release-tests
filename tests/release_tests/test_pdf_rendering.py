@@ -1,9 +1,12 @@
 import uuid
+import pytest
 from helpers.constants import NHS_NUMBER_GUKN_LETTER, PDF_RENDERING_ROUTING_CONFIGURATION
 from helpers.api.apim_request import APIHelper
 from helpers.aws.aws_client import AWSClient
 from helpers.test_data.user_data import UserData
 from helpers import switch_account
+
+@pytest.mark.skip(reason="PDF rendering tests are deprecated as of release 4.56.0 but leaving logic in place for potential future use.")
 def test_pdf_rendering(api_client):
     api_helper = APIHelper(api_client)
     aws_client = AWSClient()

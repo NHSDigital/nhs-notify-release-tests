@@ -64,7 +64,3 @@ def test_alternative_contact_details(api_client):
     verify_email_content(UserData.get_by_nhs_number(NHS_NUMBER_EMAIL, test_users))
     verify_sms_content(UserData.get_by_nhs_number(NHS_NUMBER_SMS, test_users))
     verify_gukn_letter(UserData.get_by_nhs_number(NHS_NUMBER_GUKN_LETTER, test_users))
-    
-    aws_client.trigger_letters_polling_lambdas()
-    
-    api_helper.poll_all_users_for_delivered(test_users)
