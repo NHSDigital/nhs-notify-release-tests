@@ -62,9 +62,6 @@ class AWSClient:
             quota_body = Generators.generate_quota(quota, environment)
             self.dynamo.put_item(table_name, quota_body)
 
-#"meshMailboxId":"ignore-apim_integration_test",
-#"meshWorkflowIdSuffix":"ignore-apim_integration_test",
-
     def update_client_config(self):
         environment = get_env()
         client = get_client()
