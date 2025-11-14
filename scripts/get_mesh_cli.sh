@@ -1,7 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
+# Require GH_TOKEN for private repo access
+if [ -z "${GH_TOKEN:-}" ]; then
+  echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] GH_TOKEN not set" >&2
+  exit 1
+fi
+
 REPO_URL="https://github.com/NHSDigital/comms-mgr.git"
+AUTH_REPO_URL="https://x-access-token:${GH_TOKEN}@github.com/NHSDigital/comms-mgr.git"
 PACKAGE_DIR="packages/libs/mesh-cli"
 TARGET_DIR="helpers/mesh-cli"
 BRANCH="${4:-main}"
@@ -21,17 +28,16 @@ else
   TEMP_DIR=$(mktemp -d)
   cd "$TEMP_DIR" || exit 1
 
-  git init -q
-  git remote add origin "$REPO_URL"
+  GIT_TERMINAL_PROMPT=0 git init -q
+  git remote add origin "$AUTH_REPO_URL"
   git sparse-checkout init --cone
   git sparse-checkout set "$PACKAGE_DIR" >/dev/null 2>&1
-  git pull origin "$BRANCH" --depth=1
+  GIT_TERMINAL_PROMPT=0 git pull origin "$BRANCH" --depth=1
 
   mkdir -p "$OLDPWD/$TARGET_DIR"
   cp -r "$PACKAGE_DIR/." "$OLDPWD/$TARGET_DIR/"
 
-  cd "$OLDPWD"
-  rm -rf "$TEMP_DIR"
+  cd "$OLDPWD" && rm -rf "$TEMP_DIR"
 
   log "mesh-cli package copied to '$TARGET_DIR'."
 fi
