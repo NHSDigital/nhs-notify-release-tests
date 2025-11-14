@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-REPO_URL="https://github.com/NHSDigital/comms-mgr.git"
+REPO_URL="${GH_TOKEN}@github.com/NHSDigital/comms-mgr.git"
 PACKAGE_DIR="packages/libs/mesh-cli"
 TARGET_DIR="helpers/mesh-cli"
 BRANCH="${4:-main}"

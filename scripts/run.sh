@@ -2,6 +2,9 @@
 
 set -uo pipefail
 
+# Get Github PAT
+GH_TOKEN=$(aws ssm get-parameter --name "/comms-pl/github/pl-mgmt/personal-access-token" --with-decryption --query "Parameter.Value" --output text) && export GH_TOKEN
+
 # Assume AWS role for the given account
 source ./scripts/bash_assume_role.sh ${ACCOUNT_ID} ./scripts
 
@@ -19,6 +22,8 @@ export PRIVATE_KEY=./private.key
 MESH_CLIENT_CONFIG_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/mesh-client-config" --with-decryption --query "Parameter.Value" --output text) && export MESH_CLIENT_CONFIG_CONTENTS
 echo $MESH_CLIENT_CONFIG_CONTENTS > ./client_config.json
 export MESH_CLIENT_CONFIG=./client_config.json
+
+source ./scripts/get_mesh_cli.sh
 
 # Check for presence of all required exported variables
 REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME MESH_CLIENT_CONFIG OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)
@@ -54,3 +59,5 @@ if [ -d "tests/evidence" ]; then
 else
   echo "No evidence directory found to upload."
 fi
+
+# source ./scripts/get_mesh_cli.sh
