@@ -2,6 +2,9 @@
 
 set -uo pipefail
 
+# Get Github PAT
+GH_TOKEN=$(aws ssm get-parameter --name "/comms-pl/github/pl-mgmt/personal-access-token" --with-decryption --query "Parameter.Value" --output text) && export GH_TOKEN
+
 # Assume AWS role for the given account
 source ./scripts/bash_assume_role.sh ${ACCOUNT_ID} ./scripts
 
