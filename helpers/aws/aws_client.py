@@ -191,8 +191,7 @@ class AWSClient:
             if i['SK']['S'] == 'NHS_NOTIFY_RELEASE_TESTING#AUTOMATION_FILTER_RULE':
                 assert i['active']['BOOL'] is enabled
 
-        var_value = 'debug' if enabled else 'info'
-        self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'LOG_LEVEL', var_value)
+        self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'TEST_VALUE', str(uuid.uuid1()))
 
     def query_dynamodb_by_request_item(self, request_item):
         environment = get_env()

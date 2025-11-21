@@ -1,11 +1,10 @@
 {
+  "schemaVersion": 3,
   "templateId": "nhsapp-release-testing",
   "templateRefId": "nhsapp-release-testing",
   "createdDate": "2024-03-14T00:00:00.000Z",
-  "templatedText": {
-    "fields": {
-      "bodyTemplate": "NHS Notify Release: {{{exampleParameter}}}"
-    },
-    "type": "Simple"
-  }
+  "templateFields": {
+    "body": "NHS Notify Release: {{{exampleParameter}}}"
+  },
+  "type": "Simple"
 }

@@ -2,7 +2,7 @@ import uuid
 from helpers.api.apim_request import APIHelper
 from helpers.aws.aws_client import AWSClient
 from helpers.test_data.user_data import UserData
-from helpers.constants import NHS_NUMBER_GUKN_LETTER
+from helpers.constants import NHS_NUMBER_MBA_LETTER
 from helpers.evidence import save_evidence
 
 def test_filter_rules(api_client):
@@ -13,7 +13,7 @@ def test_filter_rules(api_client):
 
     user = [
         UserData(
-            nhs_number = NHS_NUMBER_GUKN_LETTER,
+            nhs_number = NHS_NUMBER_MBA_LETTER,
             personalisation = "Filter Rules",
             message_reference= str(uuid.uuid1()),
         )

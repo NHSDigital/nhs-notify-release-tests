@@ -2,11 +2,11 @@ import uuid
 from helpers.test_data.user_data import UserData
 from helpers.aws.aws_client import AWSClient
 from helpers.api.apim_request import APIHelper
-from helpers.api.govuk_notify import verify_email_content, verify_sms_content, verify_gukn_letter
+from helpers.api.govuk_notify import verify_email_content, verify_sms_content
 from helpers.constants import (
     NHS_NUMBER_EMAIL,
     NHS_NUMBER_SMS,
-    NHS_NUMBER_GUKN_LETTER
+    NHS_NUMBER_MBA_LETTER
 )
 from helpers.logger import get_logger
 
@@ -38,7 +38,7 @@ def test_alternative_contact_details(api_client):
             }
         ),
         UserData(
-            nhs_number=NHS_NUMBER_GUKN_LETTER,
+            nhs_number=NHS_NUMBER_MBA_LETTER,
             message_reference=str(uuid.uuid1()),
             communication_type="LETTER",
             supplier="GOVUK_NOTIFY",
@@ -63,4 +63,4 @@ def test_alternative_contact_details(api_client):
 
     verify_email_content(UserData.get_by_nhs_number(NHS_NUMBER_EMAIL, test_users))
     verify_sms_content(UserData.get_by_nhs_number(NHS_NUMBER_SMS, test_users))
-    verify_gukn_letter(UserData.get_by_nhs_number(NHS_NUMBER_GUKN_LETTER, test_users))
+    aws_client.verify_mba_letter(UserData.get_by_nhs_number(NHS_NUMBER_MBA_LETTER, test_users))

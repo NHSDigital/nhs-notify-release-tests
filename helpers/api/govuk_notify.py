@@ -1,6 +1,5 @@
 from notifications_python_client.notifications import NotificationsAPIClient
 import os
-import time
 from helpers.logger import get_logger
 from helpers.evidence import save_evidence
 logger = get_logger(__name__)
@@ -43,16 +42,3 @@ def verify_email_content(user):
     evidence_path=f"{user.personalisation}/gukn_email.json"
     save_evidence(gukn_response, evidence_location=evidence_path)
     logger.info(f"Email Appears as expected for user {user.nhs_number}")
-    
-def verify_gukn_letter(user):
-    end_time = time.time() + 60
-    while time.time() < end_time:
-        try:
-            gukn_response = get_message(user.gukn_id)
-            id = gukn_response['notifications'][0]['id']
-            break
-        except:
-            logger.info(f"Waiting for GUKN letter for user {user.nhs_number} to be available")
-            time.sleep(5)
-    get_pdf(id, user)
-    logger.info(f"Letter PDF exists for user {user.nhs_number}")

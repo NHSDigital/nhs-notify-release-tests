@@ -87,11 +87,6 @@
           "suppliers": {
             "PRECISIONPROCO": "precisionproco-release-testing"
           }
-        },
-        {
-          "suppliers": {
-            "GOVUK_NOTIFY": "letter-pdf-release-testing"
-          }
         }
       ]
     }
