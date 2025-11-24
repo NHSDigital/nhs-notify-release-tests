@@ -39,11 +39,15 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
         logger.info("Entered OTP")
 
         page.wait_for_url('**/patient/')
-        expect(page.get_by_text('NHS number: 972 854 4030')).to_be_visible()
+        expect(page.get_by_text('NHS number: 973 680 5395')).to_be_visible()
         logger.info("Login journey success!")
 
         link_text = re.compile(r"You have \d+ unread messages")
         page.get_by_role("link", name=link_text).click()
+        logger.info("Navigated to message hub")
+
+        expect(page.get_by_role("heading", name="Messages")).to_be_visible()
+        page.get_by_role("link", name="Your NHS healthcare services", exact=False).first.click()
         logger.info("Navigated to messages")
 
         expect(page.get_by_role("heading", name="Your messages")).to_be_visible()

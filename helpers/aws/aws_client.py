@@ -102,6 +102,19 @@ class AWSClient:
         self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'TEST_VALUE', str(uuid.uuid1()))
         logger.info("Reset client config cache in message send lambdas")
 
+    def upload_nhsapp_registration(self):
+        environment = get_env()
+        app_registration_directory = Path("resources/nhsapp_registration")
+        file_names = [f.name for f in app_registration_directory.iterdir() if f.is_file()]
+
+        for file_name in file_names:
+            if file_name.endswith(".json"):
+                bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-nar-nhsappreg"
+                s3_directory = f"registered-patients/{file_name}/"
+                destination = f"{s3_directory}{file_name}"
+                self.s3.upload_file(bucket_name, local_file=app_registration_directory / file_name, s3_file=destination)
+            logger.info(f"Uploaded NHS App registration {file_name} to S3 bucket {bucket_name} at {destination}")
+
     def upload_templates(self):
         environment = get_env()
         template_directory = Path("resources/templates")

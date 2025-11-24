@@ -111,6 +111,7 @@ def setup_test_config():
     aws_client.update_client_config()
     aws_client.upload_templates()
     aws_client.upload_routing_configs()
+    aws_client.upload_nhsapp_registration()
 
 def pytest_runtest_logreport(report):
     """Log test results after each phase."""
