@@ -27,7 +27,7 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
         page.get_by_role("button", name="Continue").click()
         logger.info("Continuing on to username page")
 
-        expect(page.get_by_role("heading", name="Log in")).to_be_visible()
+        expect(page.get_by_role("heading", name="Log in ")).to_be_visible()
         page.get_by_role("textbox", name="Email address", exact=True).fill(os.environ['NHS_APP_USERNAME'])
         page.get_by_role("textbox", name="Password", exact=True).fill(os.environ['NHS_APP_PASSWORD'])
         page.get_by_role("button", name="Continue").click()
