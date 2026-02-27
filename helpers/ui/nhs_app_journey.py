@@ -1,3 +1,4 @@
+from pathlib import Path
 from install_playwright import install
 from playwright.sync_api import expect, sync_playwright
 import re
@@ -7,6 +8,8 @@ from helpers.constants import PATH_TO_EVIDENCE, get_env
 
 def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
     logger = get_logger(__name__)
+    debug_dir = Path(PATH_TO_EVIDENCE) / "debug"
+    debug_dir.mkdir(parents=True, exist_ok=True)
     if ods_name is None: 
         if get_env() == "int":
            ods_name = "NHS REFERRALS"
@@ -15,7 +18,7 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
 
     with sync_playwright() as playwright:
         install(playwright.chromium)
-        browser = playwright.chromium.launch()
+        browser = playwright.chromium.launch(headless=True)
         page = browser.new_page()
         page.set_default_timeout(30000)
         expect.set_options(timeout=30000)
@@ -32,8 +35,11 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
         page.get_by_role("textbox", name="Password", exact=True).fill(os.environ['NHS_APP_PASSWORD'])
         page.get_by_role("button", name="Continue").click()
         logger.info("Entered username and password")
-
+        
+        page.screenshot(path=str(debug_dir / "login_after_password.png"), full_page=True)
+       
         expect(page.get_by_role("heading", name="Enter the security code")).to_be_visible()
+        logger.info(f"Current URL after OTP page check: {page.url}")
         page.get_by_label("Security code", exact=True).fill(os.environ['NHS_APP_OTP'])
         page.get_by_role("button", name="Continue").click()
         logger.info("Entered OTP")
