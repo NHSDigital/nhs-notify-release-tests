@@ -65,20 +65,21 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
         page.get_by_label("Security code", exact=True).fill(os.environ['NHS_APP_OTP'])
         page.get_by_role("button", name="Continue").click()
         logger.info("Entered OTP")
+        
+        expect(page.get_by_role("heading", name="Trust this device and log in faster next time", exact=True)).to_be_visible()
+        page.locator('input[name="remember"][value="yes"]').check()
+        page.get_by_role("button", name="Continue").click()
+        
 
         page.locator(".loading-spinner").wait_for(state="hidden")
         page.wait_for_url('**/patient/**')
         
         if(page.url.endswith("/patient/whats-new")):
             page.get_by_role("button", name="Continue").click()
-            
-      #  expect(page.get_by_text('NHS number: 973 680 5395')).to_be_visible()
-      #  logger.info("Login journey success!")
       
         page.get_by_role("link", name="Messages").click()
 
         link_text = re.compile(r"You have \d+ unread messages")
-        #page.get_by_role("link", name=link_text).click()
         logger.info("Navigated to message hub")
 
         expect(page.get_by_role("heading", name="Messages")).to_be_visible()
