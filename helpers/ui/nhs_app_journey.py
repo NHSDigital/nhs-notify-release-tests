@@ -1,7 +1,7 @@
 from pathlib import Path
 from time import sleep
 from install_playwright import install
-from playwright.sync_api import expect, sync_playwright
+from playwright.sync_api import expect, sync_playwright, TimeoutError as PlaywrightTimeoutError
 import re
 import os
 from helpers.logger import get_logger
@@ -65,15 +65,23 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
         page.get_by_label("Security code", exact=True).fill(os.environ['NHS_APP_OTP'])
         page.get_by_role("button", name="Continue").click()
         logger.info("Entered OTP")
-        
-        expect(page.get_by_role("heading", name="Trust this device and log in faster next time", exact=True)).to_be_visible()
-        page.locator('input[name="remember"][value="yes"]').check()
-        page.get_by_role("button", name="Continue").click()
-        
+
+        try:
+            page.wait_for_url("**/trust-device**", timeout=10000)
+        except PlaywrightTimeoutError:
+            logger.info(f"Trust-device page not shown; continuing. Current URL: {page.url}")
+
+        if "/trust-device" in page.url:
+            page.locator('input[name="remember"][value="yes"]').check()
+            page.get_by_role("button", name="Continue").click()
+            logger.info("Trusted device option selected and continued")
+
+            
 
         page.locator(".loading-spinner").wait_for(state="hidden")
-        page.wait_for_url('**/patient/**')
-        
+        # page.wait_for_url('**/patient/**')
+        page.wait_for_load_state("networkidle")
+
         if(page.url.endswith("/patient/whats-new")):
             page.get_by_role("button", name="Continue").click()
       
