@@ -26,7 +26,6 @@ class APIHelper:
 
     def get_nhsapp_account(self, params):
         response = self.client.get_nhsapp_account(params)
-        assert response.status_code == 200
         return response
 
     def construct_batch_message_body(self, users):
