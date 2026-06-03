@@ -53,7 +53,6 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
        
         page.get_by_text("Enter the security code", exact=True)
     
-        page.screenshot(path=str(debug_dir / "enter_security_code.png"), full_page=True)
         logger.info(f"Current URL after OTP page check: {page.url}")
         
         if(page.url.endswith("/passkey-user-login-failed")):
@@ -65,9 +64,11 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
         page.get_by_label("Security code", exact=True).fill(os.environ['NHS_APP_OTP'])
         page.get_by_role("button", name="Continue").click()
         logger.info("Entered OTP")
-
+        page.screenshot(path=str(debug_dir / "before_trust_device.png"), full_page=True)
+       
+    
         try:
-            page.wait_for_url("**/trust-device**", timeout=10000)
+            page.wait_for_url("**/trust-device**", timeout=30000)
         except PlaywrightTimeoutError:
             logger.info(f"Trust-device page not shown; continuing. Current URL: {page.url}")
 
@@ -75,7 +76,6 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
             page.locator('input[name="remember"][value="yes"]').check()
             page.get_by_role("button", name="Continue").click()
             logger.info("Trusted device option selected and continued")
-
             
 
         page.locator(".loading-spinner").wait_for(state="hidden")
