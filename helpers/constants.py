@@ -1,10 +1,21 @@
 import os
 
+AWS_REGION = "eu-west-2"
+
 def get_env() -> str:
     return os.environ.get("ENVIRONMENT")
 
 def get_client() -> str:
     return os.environ.get("CLIENT")
+
+def get_account_id() -> str:
+    account_id = os.environ.get("AWS_ACCOUNT_ID") or os.environ.get("ACCOUNT_ID")
+    if account_id:
+        return account_id
+    raise RuntimeError("AWS_ACCOUNT_ID or ACCOUNT_ID must be set")
+
+def get_comms_bucket_name(environment: str, suffix: str) -> str:
+    return f"comms-{get_account_id()}-{AWS_REGION}-{environment}-{suffix}"
 
 NHS_NUMBER_SMOKE_TEST="9990548609"
 NHS_NUMBER_NHSAPP="9736805395"

@@ -5,7 +5,7 @@ from helpers.aws.clients.dynamodb_client import DynamoDBClient
 from helpers.aws.clients.s3_client import S3Client
 from helpers.aws.clients.lambda_client import LambdaClient
 from helpers.aws.clients.ssm_client import SSMClient
-from helpers.constants import get_env, get_client
+from helpers.constants import get_env, get_client, get_comms_bucket_name
 from helpers.logger import get_logger
 from helpers.evidence import save_evidence
 from helpers.test_data.quota_data import QuotaData
@@ -109,7 +109,7 @@ class AWSClient:
 
         for file_name in file_names:
             if file_name.endswith(".json"):
-                bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-nar-nhsappreg"
+                bucket_name = get_comms_bucket_name(environment, "api-nar-nhsappreg")
                 s3_directory = f"registered-patients/{file_name}/"
                 destination = f"{s3_directory}{file_name}"
                 self.s3.upload_file(bucket_name, local_file=app_registration_directory / file_name, s3_file=destination)
@@ -122,13 +122,13 @@ class AWSClient:
 
         for file_name in file_names:
             if file_name.endswith(".json"):
-                bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-stg-comms-mgr"
+                bucket_name = get_comms_bucket_name(environment, "api-stg-comms-mgr")
                 images = f"{template_directory}/images/qr_code.svg"
                 s3_directory = f"templates/{file_name.replace("_template.json", "")}/"
                 destination = f"{s3_directory}{file_name}"
                 self.s3.upload_file(bucket_name, local_file=images , s3_file=f"{s3_directory}images/qr_code.svg")
             elif file_name.endswith("csv"):
-                bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-lspl-letter-csv"
+                bucket_name = get_comms_bucket_name(environment, "api-lspl-letter-csv")
                 if file_name.startswith("mba"):
                     s3_directory = "MBA/fields/"
                 elif file_name.startswith("synertec"):
@@ -161,7 +161,7 @@ class AWSClient:
         file_names = [f.name for f in template_directory.iterdir() if f.is_file()]
 
         for file_name in file_names:
-            bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-stg-comms-mgr"
+            bucket_name = get_comms_bucket_name(environment, "api-stg-comms-mgr")
             s3_directory = f"sending-groups/{file_name.replace('_routing-config.json','')}"
             destination = f"{s3_directory}/{file_name}"
             routing_config = self.update_routing_configs(template_directory, file_name)
@@ -223,7 +223,7 @@ class AWSClient:
 
     def verify_precision_proco_letter(self, user):
         environment = get_env()
-        bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-lspl-letter-csv"
+        bucket_name = get_comms_bucket_name(environment, "api-lspl-letter-csv")
         file = f"PRECISIONPROCO/uploaded/precisionproco-release-testing/{user.batch_id}.csv" 
         content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
@@ -232,7 +232,7 @@ class AWSClient:
         
     def verify_mba_letter(self, user):
         environment = get_env()
-        bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-lspl-letter-csv"       
+        bucket_name = get_comms_bucket_name(environment, "api-lspl-letter-csv")
         file = f"MBA/uploaded/mba-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
@@ -241,7 +241,7 @@ class AWSClient:
 
     def verify_synertec_letter(self, user):
         environment = get_env()
-        bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-lspl-letter-csv"
+        bucket_name = get_comms_bucket_name(environment, "api-lspl-letter-csv")
         file = f"SYNERTEC/uploaded/synertec-release-testing/{user.batch_id}.csv"
         content = self.get_s3_object(bucket_name, file).decode('utf-8')
         assert user.personalisation in content
@@ -250,7 +250,7 @@ class AWSClient:
 
     def verify_pdf_rendering_letter_test_account(self, user):
         environment = get_env()
-        bucket_name = f"comms-736102632839-eu-west-2-{environment}-api-stg-pdf-pipeline"
+        bucket_name = get_comms_bucket_name(environment, "api-stg-pdf-pipeline")
         prefix = "PRERENDERMOCK/batches/"
         response = self.list_s3_bucket_contents(bucket_name=bucket_name, prefix=prefix)
         #Get the most recent file
