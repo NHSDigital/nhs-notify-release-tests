@@ -21,6 +21,14 @@ class LambdaClient:
         updated = self.client.get_function_configuration(FunctionName=lambda_name)
         assert updated['Environment']['Variables'][var_key] == var_value
 
+    def update_env_var_if_exists(self, lambda_name, var_key, var_value):
+        try:
+            self.update_env_var(lambda_name, var_key, var_value)
+            return True
+        except self.client.exceptions.ResourceNotFoundException:
+            logger.info("Lambda %s not found when updating %s; trying fallback if configured.", lambda_name, var_key)
+            return False
+
     def invoke_lambda(self, lambda_name, payload, invocation_type='RequestResponse'):
         response = self.client.invoke(
             FunctionName=lambda_name,

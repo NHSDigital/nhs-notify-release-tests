@@ -22,6 +22,22 @@ class AWSClient:
         self.s3 = S3Client(region_name)
         self.ssm = SSMClient(region_name='eu-west-2')
 
+    def reset_enrichment_lambda_cache(self, environment):
+        lambda_names = [
+            f'comms-{environment}-api-requestenrichmentlambda-enrich',
+            f'comms-{environment}-api-ecl-enrich',
+        ]
+        test_value = str(uuid.uuid1())
+
+        for lambda_name in lambda_names:
+            if self.lambda_.update_env_var_if_exists(lambda_name, 'TEST_VALUE', test_value):
+                return
+
+        raise RuntimeError(
+            f"Unable to reset enrichment lambda cache for environment '{environment}'. "
+            f"Tried: {', '.join(lambda_names)}"
+        )
+
     def list_s3_bucket_contents(self, bucket_name, prefix=""):
         response = self.s3.list_objects(bucket_name, prefix)
         if 'Contents' in response:
@@ -99,7 +115,7 @@ class AWSClient:
 
         self.lambda_.update_env_var(f'comms-{environment}-api-oa3-commsapi-apim-create-message', 'TEST_VALUE', str(uuid.uuid1()))
         self.lambda_.update_env_var(f'comms-{environment}-api-oa3-commsapi-apim-create-request', 'TEST_VALUE', str(uuid.uuid1()))
-        self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'TEST_VALUE', str(uuid.uuid1()))
+        self.reset_enrichment_lambda_cache(environment)
         logger.info("Reset client config cache in message send lambdas")
 
     def upload_nhsapp_registration(self):
@@ -204,7 +220,7 @@ class AWSClient:
             if i['SK']['S'] == 'NHS_NOTIFY_RELEASE_TESTING#AUTOMATION_FILTER_RULE':
                 assert i['active']['BOOL'] is enabled
 
-        self.lambda_.update_env_var(f'comms-{environment}-api-ecl-enrich', 'TEST_VALUE', str(uuid.uuid1()))
+        self.reset_enrichment_lambda_cache(environment)
 
     def query_dynamodb_by_request_item(self, request_item):
         environment = get_env()
