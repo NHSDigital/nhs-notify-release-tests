@@ -1,0 +1,14 @@
+.git
+.github
+.pytest_cache
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+*.pyd
+*.pyo
+.DS_Store
+client_config.json
+dev-private.key
+private.key
+tests/evidence
