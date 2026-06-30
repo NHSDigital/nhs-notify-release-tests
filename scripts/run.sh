@@ -2,26 +2,94 @@
 
 set -uo pipefail
 
+get_ssm_parameter_value() {
+  local parameter_name="$1"
+
+  aws ssm get-parameter \
+    --name "$parameter_name" \
+    --with-decryption \
+    --query "Parameter.Value" \
+    --output text 2>/dev/null
+}
+
+get_release_test_secret() {
+  local secret_name="$1"
+  local primary_parameter="/comms/${ENVIRONMENT}/release-tests/${secret_name}"
+  local fallback_environment="${RELEASE_TESTS_CONFIG_FALLBACK_ENVIRONMENT:-uat}"
+  local fallback_parameter="/comms/${fallback_environment}/release-tests/${secret_name}"
+  local value
+
+  value=$(get_ssm_parameter_value "$primary_parameter")
+  if [ -n "$value" ] && [ "$value" != "None" ]; then
+    printf '%s' "$value"
+    return 0
+  fi
+
+  if [ "$ENVIRONMENT" != "$fallback_environment" ]; then
+    value=$(get_ssm_parameter_value "$fallback_parameter")
+    if [ -n "$value" ] && [ "$value" != "None" ]; then
+      echo "Using fallback release test config from ${fallback_parameter}" >&2
+      printf '%s' "$value"
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+default_base_url() {
+  case "$ENVIRONMENT" in
+    int|ref|uat)
+      printf 'https://%s.api.service.nhs.uk/comms' "$ENVIRONMENT"
+      ;;
+    internal-qa)
+      printf 'https://internal-qa.api.service.nhs.uk/comms'
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 # Get Github PAT
 GH_TOKEN=$(aws ssm get-parameter --name "/comms-pl/github/pl-mgmt/personal-access-token" --with-decryption --query "Parameter.Value" --output text) && export GH_TOKEN
 
 # Assume AWS role for the given account
 source ./scripts/bash_assume_role.sh ${ACCOUNT_ID} ./scripts
 
-# Fetch secrets and configuration from AWS SSM Parameter Store in the target account
-API_ENVIRONMENT=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/api-environment" --with-decryption --query "Parameter.Value" --output text) && export API_ENVIRONMENT
-API_KEY=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/api-key" --with-decryption --query "Parameter.Value" --output text) && export API_KEY
-BASE_URL=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/base-url" --with-decryption --query "Parameter.Value" --output text) && export BASE_URL
-GUKN_API_KEY=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/gukn-api-key" --with-decryption --query "Parameter.Value" --output text) && export GUKN_API_KEY
-NHS_APP_OTP=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-otp" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_OTP
-NHS_APP_PASSWORD=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-password" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_PASSWORD
-NHS_APP_USERNAME=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/nhs-app-username" --with-decryption --query "Parameter.Value" --output text) && export NHS_APP_USERNAME
-PRIVATE_KEY_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/private-key" --with-decryption --query "Parameter.Value" --output text) && export PRIVATE_KEY_CONTENTS
-echo $PRIVATE_KEY_CONTENTS > ./private.key
+# Fetch secrets and configuration from AWS SSM Parameter Store in the target account.
+# Ref can reuse the shared release test secrets from uat, but it must still target ref APIs/resources.
+API_ENVIRONMENT=$(get_ssm_parameter_value "/comms/${ENVIRONMENT}/release-tests/api-environment")
+if [ -z "${API_ENVIRONMENT:-}" ] || [ "$API_ENVIRONMENT" = "None" ]; then
+  API_ENVIRONMENT="$ENVIRONMENT"
+fi
+export API_ENVIRONMENT
+
+BASE_URL=$(get_ssm_parameter_value "/comms/${ENVIRONMENT}/release-tests/base-url")
+if [ -z "${BASE_URL:-}" ] || [ "$BASE_URL" = "None" ]; then
+  BASE_URL=$(default_base_url)
+fi
+export BASE_URL
+
+API_KEY=$(get_release_test_secret "api-key") && export API_KEY
+GUKN_API_KEY=$(get_release_test_secret "gukn-api-key") && export GUKN_API_KEY
+NHS_APP_OTP=$(get_release_test_secret "nhs-app-otp") && export NHS_APP_OTP
+NHS_APP_PASSWORD=$(get_release_test_secret "nhs-app-password") && export NHS_APP_PASSWORD
+NHS_APP_USERNAME=$(get_release_test_secret "nhs-app-username") && export NHS_APP_USERNAME
+PRIVATE_KEY_CONTENTS=$(get_release_test_secret "private-key") && export PRIVATE_KEY_CONTENTS
+printf '%s' "$PRIVATE_KEY_CONTENTS" > ./private.key
 export PRIVATE_KEY=./private.key
-MESH_CLIENT_CONFIG_CONTENTS=$(aws ssm get-parameter --name "/comms/${ENVIRONMENT}/release-tests/mesh-client-config" --with-decryption --query "Parameter.Value" --output text) && export MESH_CLIENT_CONFIG_CONTENTS
-echo $MESH_CLIENT_CONFIG_CONTENTS > ./client_config.json
+MESH_CLIENT_CONFIG_CONTENTS=$(get_release_test_secret "mesh-client-config") && export MESH_CLIENT_CONFIG_CONTENTS
+printf '%s' "$MESH_CLIENT_CONFIG_CONTENTS" > ./client_config.json
 export MESH_CLIENT_CONFIG=./client_config.json
+
+if [ -z "${CLIENT:-}" ]; then
+  if [ "$API_ENVIRONMENT" = "int" ]; then
+    export CLIENT="apim_integration_test"
+  else
+    export CLIENT="apim_integration_test_client_id"
+  fi
+fi
 
 # Check for presence of all required exported variables
 REQUIRED_VARS=(ACCOUNT_ID ENVIRONMENT API_ENVIRONMENT API_KEY BASE_URL GUKN_API_KEY NHS_APP_OTP NHS_APP_PASSWORD NHS_APP_USERNAME MESH_CLIENT_CONFIG OUTPUT_BUCKET PRIVATE_KEY PRIVATE_KEY_CONTENTS)
