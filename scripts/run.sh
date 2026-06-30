@@ -15,9 +15,17 @@ get_ssm_parameter_value() {
 get_release_test_secret() {
   local secret_name="$1"
   local primary_parameter="/comms/${ENVIRONMENT}/release-tests/${secret_name}"
-  local fallback_environment="${RELEASE_TESTS_CONFIG_FALLBACK_ENVIRONMENT:-uat}"
-  local fallback_parameter="/comms/${fallback_environment}/release-tests/${secret_name}"
+  local fallback_environment="${RELEASE_TESTS_CONFIG_FALLBACK_ENVIRONMENT:-}"
+  local fallback_parameter=""
   local value
+
+  if [ -z "$fallback_environment" ] && [ "$ENVIRONMENT" = "ref" ]; then
+    fallback_environment="uat"
+  fi
+
+  if [ -n "$fallback_environment" ]; then
+    fallback_parameter="/comms/${fallback_environment}/release-tests/${secret_name}"
+  fi
 
   value=$(get_ssm_parameter_value "$primary_parameter")
   if [ -n "$value" ] && [ "$value" != "None" ]; then
@@ -25,7 +33,7 @@ get_release_test_secret() {
     return 0
   fi
 
-  if [ "$ENVIRONMENT" != "$fallback_environment" ]; then
+  if [ -n "$fallback_environment" ] && [ "$ENVIRONMENT" != "$fallback_environment" ]; then
     value=$(get_ssm_parameter_value "$fallback_parameter")
     if [ -n "$value" ] && [ "$value" != "None" ]; then
       echo "Using fallback release test config from ${fallback_parameter}" >&2

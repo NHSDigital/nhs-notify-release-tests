@@ -69,19 +69,19 @@ def pytest_assertrepr_compare(op, left, right):
 def set_environment_variables():
     environment = os.environ.get("ENVIRONMENT")
 
-    if "API_ENVIRONMENT" not in os.environ:
+    if not os.environ.get("API_ENVIRONMENT"):
         if environment == "int":
             os.environ["API_ENVIRONMENT"] = "int"
         else:
             os.environ["API_ENVIRONMENT"] = "internal-qa"
 
-    if "BASE_URL" not in os.environ:
+    if not os.environ.get("BASE_URL"):
         if environment == "int":
             os.environ["BASE_URL"] = "https://int.api.service.nhs.uk/comms"
         else:
             os.environ["BASE_URL"] = "https://internal-qa.api.service.nhs.uk/comms"
 
-    if "CLIENT" not in os.environ:
+    if not os.environ.get("CLIENT"):
         if environment == "int":
             os.environ["CLIENT"] = "apim_integration_test"
         else:
