@@ -104,8 +104,10 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
                     f"Login did not reach an NHS App patient page after {max_attempts} attempts. Current URL: {page.url}"
                 )
             logger.info("Retrying NHS App login flow from onboarding step")
-
+        
         if page.url.endswith("/patient/whats-new"):
+            page.get_by_role("button", name="Continue").click()
+        elif page.url.endswith("privacy-policy-updated"):
             page.get_by_role("button", name="Continue").click()
 
         try:
