@@ -76,7 +76,10 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
                 page.get_by_role("button", name="Continue").click()
                 logger.info("Trusted device option selected and continued")
 
-            page.wait_for_load_state("networkidle")
+            try:
+                page.wait_for_load_state("networkidle", timeout=30000)
+            except PlaywrightTimeoutError:
+                logger.info(f"Network idle state not reached. Current URL: {page.url}")
 
             if page.url.endswith("/error"):
                 logger.warning("Reached /error after OTP on attempt %s; restarting login flow", attempt_index)
