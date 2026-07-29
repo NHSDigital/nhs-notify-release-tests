@@ -66,15 +66,17 @@ def nhs_app_login_and_view_message(ods_name=None, personalisation=None):
             logger.info("Entered OTP")
             page.screenshot(path=str(debug_dir / f"before_trust_device_attempt_{attempt_index}.png"), full_page=True)
 
+            trust_device_shown = False
+
             try:
                 page.wait_for_url("**/trust-device**", timeout=30000)
+                trust_device_shown = True
             except PlaywrightTimeoutError:
-                logger.info(f"Trust-device page not shown; continuing. Current URL: {page.url}")
+                logger.info("Trust-device page not shown; continuing.")
 
-            if "/trust-device" in page.url:
+            if trust_device_shown:
                 page.locator('input[name="remember"][value="yes"]').check()
                 page.get_by_role("button", name="Continue").click()
-                logger.info("Trusted device option selected and continued")
 
             try:
                 page.wait_for_load_state("networkidle", timeout=30000)
